@@ -67,7 +67,7 @@ export default function PageViewer() {
                   style={{ height: '120px' }}
                 />
               </div>
-              <p className="text-center text-[8px] mt-0.5 font-medium rounded py-0.5 truncate px-0.5 bg-teal-700 text-white">
+              <p className="text-center text-[8px] mt-0.5 font-medium rounded py-0.5 truncate px-0.5 bg-cyan-900 text-white">
                 {pg.title}
               </p>
             </div>

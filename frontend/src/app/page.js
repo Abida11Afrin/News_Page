@@ -2,24 +2,52 @@
 import Image from "next/image";
 import LiveBanglaDateModule from "../components/LiveBanglaDateModule";
 import PageViewer from "../components/PageViewer";
+import { useState } from "react";
 
 export default function Home() {
   const pages = ["১", "২", "৩", "৪", "৫", "৬", "৭", "৮"];
+
   const months = [
     "জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",
     "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর",
   ];
   const years = ["২০২৪", "২০২৫", "২০২৬"];
-  const calendarDays = ["রবি", "সোম", "মঙ্গল", "বুধ", "বৃহ", "শুক্র", "শনি"];
-  const calendarDates = [
-    ["", "", "", "", "", "", "১"],
-    ["২", "৩", "৪", "৫", "৬", "৭", "৮"],
-    ["৯", "১০", "১১", "১২", "১৩", "১৪", "১৫"],
-    ["১৬", "১৭", "১৮", "১৯", "২০", "২১", "২২"],
-    ["২৩", "২৪", "২৫", "২৬", "২৭", "২৮", "২৯"],
-    ["৩০", "", "", "", "", "", ""],
-  ];
-  const todayDate = new Date().getDate().toLocaleString("bn-BD");
+
+  const today = new Date();
+  const [selectedMonth, setSelectedMonth] = useState(today.getMonth());
+  const [selectedYear, setSelectedYear] = useState(today.getFullYear());
+
+  const calendarDays = ["র", "স", "ম", "ব", "বৃ", "শু", "শ"];
+
+  // Dynamic calendar dates
+  const getCalendarDates = (month, year) => {
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const weeks = [];
+    let day = 1;
+
+    for (let w = 0; w < 6; w++) {
+      const week = [];
+      for (let d = 0; d < 7; d++) {
+        if (w === 0 && d < firstDay) {
+          week.push("");
+        } else if (day > daysInMonth) {
+          week.push("");
+        } else {
+          week.push(day.toLocaleString("bn-BD"));
+          day++;
+        }
+      }
+      weeks.push(week);
+      if (day > daysInMonth) break;
+    }
+    return weeks;
+  };
+
+  const calendarDates = getCalendarDates(selectedMonth, selectedYear);
+  const todayDate = today.getDate().toLocaleString("bn-BD");
+  const isCurrentMonthYear =
+    selectedMonth === today.getMonth() && selectedYear === today.getFullYear();
 
   const pageList = [
     { name: "page-1", active: true },
@@ -33,7 +61,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-White-200 px-2">
+    <main className="min-h-screen flex items-center justify-center bg-white-200 px-2">
       <div className="bg-white w-full max-w-[1000px] rounded-2xl shadow-[0_0_25px_rgba(0,0,0,0.2)] border border-gray-300 flex flex-col my-4 overflow-hidden">
 
         {/* HEADER */}
@@ -51,7 +79,7 @@ export default function Home() {
           </div>
 
           {/* Nav Bar */}
-          <div className="bg-cyan-800 flex items-center justify-between px-3 sm:px-4 py-2 flex-wrap gap-2">
+          <div className="bg-cyan-900 flex items-center justify-between px-3 sm:px-4 py-2 flex-wrap gap-2">
             <div className="flex items-center gap-2">
               <button className="text-white text-lg px-1">🏠</button>
               <span className="hidden sm:inline text-white">|</span>
@@ -81,83 +109,98 @@ export default function Home() {
           </div>
         </header>
 
-{/* ======== MAIN CONTENT ======== */}
-<div className="flex flex-row flex-1 gap-1 p-1 md:gap-1 md:p-1">
-  <PageViewer />
+        {/* ======== MAIN CONTENT ======== */}
+        <div className="flex flex-row flex-1 gap-1 p-1">
+          <PageViewer />
 
-  {/* Right Sidebar */}
-  <div className="flex flex-col gap-2 order-3" style={{ width: '150px', minWidth: '150px' }}>
-    
-    {/* পুরোনো সংখ্যা */}
-    <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-      <div className="bg-teal-700 text-white text-center text-[10px] font-medium py-1">
-        পুরোনো সংখ্যা
-      </div>
-      <div className="p-1">
-        <div className="flex gap-0.5 mb-1">
-          <select className="flex-1 text-[8px] border border-orange-400 rounded px-0.5 py-0.5">
-            {months.map((m, i) => <option key={i}>{m}</option>)}
-          </select>
-          <select className="w-10 text-[8px] border border-orange-400 rounded px-0.5 py-0.5">
-            {years.map((y, i) => <option key={i}>{y}</option>)}
-          </select>
-        </div>
-        <table className="w-full text-[7px] border border-orange-300">
-          <thead>
-            <tr className="bg-orange-50">
-              {calendarDays.map((d, i) => (
-                <th key={i} className="py-0.5 text-center text-gray-600 font-medium border border-orange-200" style={{ fontSize: '6px' }}>
-                  {d.charAt(0)}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {calendarDates.map((week, wi) => (
-              <tr key={wi}>
-                {week.map((date, di) => (
-                  <td key={di} className={`text-center py-0.5 border border-orange-200
-                    ${date === todayDate ? "bg-orange-500 text-white font-bold" : "text-gray-700"}
-                    ${di === 0 ? "text-red-500" : ""}
-                  `} style={{ fontSize: '7px' }}>
-                    {date}
-                  </td>
+          {/* Right Sidebar */}
+          <div className="flex flex-col gap-2 order-3" style={{ width: '150px', minWidth: '150px' }}>
+
+            {/* পুরোনো সংখ্যা */}
+            <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
+              <div className="bg-teal-700 text-white text-center text-[10px] font-medium py-1">
+                পুরোনো সংখ্যা
+              </div>
+              <div className="p-1">
+                <div className="flex gap-0.5 mb-1">
+                  <select
+                    className="flex-1 text-[8px] border border-orange-400 rounded px-0.5 py-0.5"
+                    value={selectedMonth}
+                    onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                  >
+                    {months.map((m, i) => <option key={i} value={i}>{m}</option>)}
+                  </select>
+                  <select
+                    className="w-12 text-[8px] border border-orange-400 rounded px-0.5 py-0.5"
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                  >
+                    {years.map((y, i) => (
+                      <option key={i} value={2024 + i}>{y}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <table className="w-full text-[7px] border border-orange-300">
+                  <thead>
+                    <tr className="bg-orange-50">
+                      {calendarDays.map((d, i) => (
+                        <th key={i} className="py-0.5 text-center text-gray-600 font-medium border border-orange-200" style={{ fontSize: '6px' }}>
+                          {d}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {calendarDates.map((week, wi) => (
+                      <tr key={wi}>
+                        {week.map((date, di) => (
+                          <td
+                            key={di}
+                            className={`text-center py-0.5 border border-orange-200 cursor-pointer hover:bg-orange-100
+                              ${isCurrentMonthYear && date === todayDate ? "bg-orange-500 text-white font-bold" : "text-gray-700"}
+                              ${di === 0 && date ? "text-red-500" : ""}
+                            `}
+                            style={{ fontSize: '7px' }}
+                          >
+                            {date}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* আজকের পত্রিকা */}
+            <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
+              <div className="bg-cyan-900 text-white text-center text-[10px] font-medium py-1">
+                আজকের পত্রিকা
+              </div>
+              <div className="p-1 flex flex-col gap-0.5">
+                {pageList.map((pg, i) => (
+                  <div key={i} className="flex items-center gap-1">
+                    <span className={`text-[8px] ${pg.active ? "text-blue-600" : "text-gray-400"}`}>
+                      {pg.active ? "✅" : "☑"}
+                    </span>
+                    <button className={`text-[8px] hover:underline truncate ${
+                      pg.active ? "text-blue-600" : "text-gray-400"
+                    }`}>
+                      {pg.name}
+                    </button>
+                  </div>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+                <div className="mt-1 pt-1 border-t border-gray-200">
+                  <button className="text-[8px] text-blue-600 hover:underline">
+                    For Advertisement
+                  </button>
+                </div>
+              </div>
+            </div>
 
-    {/* আজকের পত্রিকা */}
-    <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-      <div className="bg-teal-700 text-white text-center text-[10px] font-medium py-1">
-        আজকের পত্রিকা
-      </div>
-      <div className="p-1 flex flex-col gap-0.5">
-        {pageList.map((pg, i) => (
-          <div key={i} className="flex items-center gap-1">
-            <span className={`text-[8px] ${pg.active ? "text-blue-600" : "text-gray-400"}`}>
-              {pg.active ? "✅" : "☑"}
-            </span>
-            <button className={`text-[8px] hover:underline truncate ${
-              pg.active ? "text-blue-600" : "text-gray-400"
-            }`}>
-              {pg.name}
-            </button>
           </div>
-        ))}
-        <div className="mt-1 pt-1 border-t border-gray-200">
-          <button className="text-[8px] text-blue-600 hover:underline">
-            For Ad
-          </button>
         </div>
-      </div>
-    </div>
-
-  </div>
-</div>
 
         {/* FOOTER */}
         <footer className="bg-white border-t-4 border-blue-600 mt-2">
