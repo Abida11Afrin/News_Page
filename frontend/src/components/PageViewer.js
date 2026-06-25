@@ -6,34 +6,46 @@ import { useRouter } from 'next/navigation';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const sizeMap = {
-  small:  { width: 150, height: 200 },
+  small: { width: 150, height: 200 },
   medium: { width: 250, height: 330 },
-  large:  { width: 350, height: 460 },
-  full:   { width: 500, height: 660 },
+  large: { width: 350, height: 460 },
+  full: { width: 500, height: 660 },
 };
 
 const positionClass = {
-  left:   'justify-start',
+  left: 'justify-start',
   center: 'justify-center',
-  right:  'justify-end',
+  right: 'justify-end',
 };
 
 export default function PageViewer() {
   const [pages, setPages] = useState([]);
   const [homeImages, setHomeImages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null); // Image Viewer State
   const router = useRouter();
 
   useEffect(() => {
     Promise.all([
       fetch(`${API_URL}/api/pages/`).then((r) => r.json()),
       fetch(`${API_URL}/api/homepage-images/`).then((r) => r.json()),
-    ]).then(([pagesData, imagesData]) => {
-      setPages(pagesData);
-      setHomeImages(imagesData);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    ])
+      .then(([pagesData, imagesData]) => {
+        setPages(pagesData);
+        setHomeImages(imagesData);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
+
+  // Image Viewer Functions
+  const openViewer = (img) => {
+    setSelectedImage(img);
+  };
+
+  const closeViewer = () => {
+    setSelectedImage(null);
+  };
 
   if (loading) {
     return (
@@ -81,29 +93,39 @@ export default function PageViewer() {
           className="bg-white rounded-3xl overflow-hidden flex-1 flex flex-col"
           style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.13), 0 1.5px 6px rgba(0,0,0,0.08)' }}
         >
-          {/* Images area */}
+          {/* Images area with Image Viewer */}
           <div className="flex-1 p-3 flex flex-col gap-3" style={{ minHeight: '300px' }}>
             {homeImages.length > 0 ? (
               homeImages.map((img) => {
                 const size = sizeMap[img.size] || sizeMap.medium;
                 return (
-                  <div key={img.id} className={`flex w-full ${positionClass[img.position] || 'justify-center'}`}>
-                    <Image
-                      src={img.image_url}
-                      alt="ছবি"
-                      width={size.width}
-                      height={size.height}
-                      className="object-contain rounded-xl"
-                      style={{ width: size.width, height: 'auto' }}
-                    />
+                  <div
+                    key={img.id}
+                    className={`flex w-full ${positionClass[img.position] || 'justify-center'}`}
+                  >
+                    <div
+                      onClick={() => openViewer(img)}
+                      className="cursor-pointer overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl group relative"
+                    >
+                      <Image
+                        src={img.image_url}
+                        alt="ছবি"
+                        width={size.width}
+                        height={size.height}
+                        className="object-contain rounded-xl transition-transform duration-300 group-hover:scale-110"
+                        style={{ width: size.width, height: 'auto' }}
+                      />
+                      {/* Hover Indicator */}
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                       
+                      </div>
+                    </div>
                   </div>
                 );
               })
             ) : (
               <div className="flex-1 flex items-center justify-center">
-                <p className="text-gray-400 text-center text-sm">
-                  বাম পাশ থেকে পাতা নির্বাচন করুন
-                </p>
+                <p className="text-gray-400 text-center text-sm">কোনো ছবি পাওয়া যায়নি</p>
               </div>
             )}
           </div>
@@ -124,6 +146,45 @@ export default function PageViewer() {
           </div>
         </div>
       </div>
+
+      {/* ==================== FULLSCREEN IMAGE VIEWER ==================== */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4"
+          onClick={closeViewer}
+        >
+          <div
+            className="relative max-w-5xl w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={closeViewer}
+              className="absolute -top-5 -right-5 bg-white text-black w-11 h-11 rounded-full flex items-center justify-center text-3xl shadow-xl hover:bg-red-500 hover:text-white transition-all z-10"
+            >
+              ×
+            </button>
+
+            {/* Main Image */}
+            <Image
+              src={selectedImage.image_url}
+              alt="ছবি"
+              width={900}
+              height={700}
+              className="w-full h-auto rounded-2xl shadow-2xl"
+              style={{ maxHeight: '88vh', objectFit: 'contain' }}
+              priority
+            />
+
+            {/* Optional Title/Caption */}
+            {selectedImage.title && (
+              <p className="text-center text-white mt-4 text-sm bg-black/50 py-2 px-4 rounded-lg">
+                {selectedImage.title}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }
