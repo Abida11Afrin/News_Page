@@ -33,8 +33,8 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-200 px-2">
-      <div className="bg-white w-full max-w-[1200px] rounded-xl shadow-[0_0_25px_rgba(0,0,0,0.2)] border border-gray-300 flex flex-col my-4 overflow-hidden">
+    <main className="min-h-screen flex items-center justify-center bg-White-200 px-2">
+      <div className="bg-white w-full max-w-[1000px] rounded-2xl shadow-[0_0_25px_rgba(0,0,0,0.2)] border border-gray-300 flex flex-col my-4 overflow-hidden">
 
         {/* HEADER */}
         <header className="bg-white">
@@ -82,11 +82,11 @@ export default function Home() {
         </header>
 
 {/* ======== MAIN CONTENT ======== */}
-<div className="flex flex-row flex-1 gap-1 p-2 md:gap-2 md:p-4">
+<div className="flex flex-row flex-1 gap-1 p-1 md:gap-1 md:p-1">
   <PageViewer />
 
   {/* Right Sidebar */}
-  <div className="flex flex-col gap-2 order-3" style={{ width: '100px', minWidth: '100px' }}>
+  <div className="flex flex-col gap-2 order-3" style={{ width: '150px', minWidth: '150px' }}>
     
     {/* পুরোনো সংখ্যা */}
     <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
