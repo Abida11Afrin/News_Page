@@ -24,3 +24,99 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* CKEditor content styles */
+.ck-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.ck-content p {
+  margin-bottom: 0.75rem;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.ck-content figure {
+  margin: 0;
+}
+
+.ck-content figure.image {
+  display: inline-block;
+}
+
+.ck-content figure.image-style-align-left {
+  float: left;
+  margin-right: 1rem;
+}
+
+.ck-content figure.image-style-align-right {
+  float: right;
+  margin-left: 1rem;
+}
+
+.ck-content figure.image-style-align-center {
+  margin: 0 auto;
+  display: block;
+}
+
+.ck-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.ck-content p {
+  margin: 0;
+  padding: 0;
+}
+
+.ck-content figure {
+  margin: 0 auto;
+  display: block;
+  text-align: center;
+}
+
+.ck-content figure.image {
+  display: block;
+  margin: 0 auto;
+}
+
+.ck-content figure.image-style-align-left {
+  float: left;
+  margin-right: 1rem;
+  margin-left: 0;
+}
+
+.ck-content figure.image-style-align-right {
+  float: right;
+  margin-left: 1rem;
+  margin-right: 0;
+}
+
+.ck-content figure.image-style-align-center {
+  float: none;
+  margin: 0 auto;
+  display: block;
+}
+
+.ck-content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ck-content table td {
+  border: none;
+  padding: 4px;
+  vertical-align: top;
+}
+
+.ck-content table td img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+

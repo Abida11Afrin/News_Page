@@ -20,7 +20,7 @@ class HomePageImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HomePageImage
-        fields = ['id', 'image_url', 'position', 'size', 'order']
+        fields = ['id', 'image_url', 'content', 'position', 'size', 'order']
 
     def get_image_url(self, obj):
         request = self.context.get('request')

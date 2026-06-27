@@ -1,4 +1,5 @@
 from django.db import models
+from ckeditor_uploader.fields import RichTextUploadingField
 
 class Page(models.Model):
     title = models.CharField(max_length=200, verbose_name="পাতার নাম")
@@ -30,6 +31,7 @@ class HomePageImage(models.Model):
     ]
 
     image = models.ImageField(upload_to='homepage/', verbose_name="ছবি")
+    content = RichTextUploadingField(verbose_name="কন্টেন্ট (CKEditor)", blank=True, null=True)  # ← এটা আছে?
     position = models.CharField(max_length=10, choices=POSITION_CHOICES, default='center', verbose_name="অবস্থান")
     size = models.CharField(max_length=10, choices=SIZE_CHOICES, default='medium', verbose_name="সাইজ")
     order = models.PositiveIntegerField(default=0, verbose_name="ক্রম")
