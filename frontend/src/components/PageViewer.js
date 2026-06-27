@@ -169,39 +169,122 @@ export default function PageViewer() {
         </div>
       </div>
 
-      {/* Fullscreen Image Viewer */}
-      {selectedImage && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4"
+{/* Fullscreen Image Viewer */}
+{selectedImage && (
+  <div
+    className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4"
+    onClick={closeViewer}
+  >
+    <div
+      className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+      style={{ maxHeight: '95vh' }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Header */}
+      <div className="relative flex items-center justify-center px-6 py-4 border-b shrink-0">
+        <img
+          src="/logo.png"
+          alt="প্রতিদিনের কাগজ"
+          className="h-[50px] w-auto"
+        />
+        <button
           onClick={closeViewer}
+          className="absolute right-6 bg-gray-100 text-black w-11 h-11 rounded-full flex items-center justify-center text-3xl shadow hover:bg-red-500 hover:text-white transition-all"
         >
-          <div
-            className="relative max-w-5xl w-full"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={closeViewer}
-              className="absolute -top-5 -right-5 bg-white text-black w-11 h-11 rounded-full flex items-center justify-center text-3xl shadow-xl hover:bg-red-500 hover:text-white transition-all z-10"
-            >
-              ×
-            </button>
-            <Image
-              src={selectedImage.image_url}
-              alt="ছবি"
-              width={900}
-              height={700}
-              className="w-full h-auto rounded-2xl shadow-2xl"
-              style={{ maxHeight: '88vh', objectFit: 'contain' }}
-              priority
-            />
-            {selectedImage.title && (
-              <p className="text-center text-white mt-4 text-sm bg-black/50 py-2 px-4 rounded-lg">
-                {selectedImage.title}
-              </p>
-            )}
-          </div>
-        </div>
-      )}
-    </>
+          ×
+        </button>
+      </div>
+
+      {/* Image — scrollable */}
+      <div className="overflow-y-auto flex-1 p-4">
+        <Image
+          src={selectedImage.image_url}
+          alt="ছবি"
+          width={1200}
+          height={1600}
+          className="w-full h-auto rounded-xl object-contain"
+          priority
+        />
+        {selectedImage.title && (
+          <p className="text-center text-gray-700 mt-4 text-sm">
+            {selectedImage.title}
+          </p>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="flex items-center gap-2 px-4 py-3 border-t bg-gray-50 shrink-0">
+        <span className="text-xs text-gray-500 mr-1">শেয়ার করুন</span>
+
+        {/* Facebook */}
+        <button
+          onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(selectedImage.image_url)}`, '_blank')}
+          className="w-8 h-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center transition-all"
+          title="Facebook"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+          </svg>
+        </button>
+
+        {/* Twitter/X */}
+        <button
+          onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(selectedImage.image_url)}`, '_blank')}
+          className="w-8 h-8 bg-sky-500 hover:bg-sky-600 text-white rounded-full flex items-center justify-center transition-all"
+          title="Twitter"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+          </svg>
+        </button>
+
+        {/* Chrome/Web */}
+        <button
+          onClick={() => window.open(selectedImage.image_url, '_blank')}
+          className="w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-all"
+          title="Browser এ খুলুন"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+          </svg>
+        </button>
+
+        {/* Print */}
+        <button
+          onClick={() => window.print()}
+          className="w-8 h-8 bg-gray-600 hover:bg-gray-700 text-white rounded-full flex items-center justify-center transition-all"
+          title="প্রিন্ট"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+            <polyline points="6 9 6 2 18 2 18 9"/>
+            <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+            <rect x="6" y="14" width="12" height="8"/>
+          </svg>
+        </button>
+
+        {/* Copy Link */}
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(selectedImage.image_url);
+            alert('লিংক কপি হয়েছে!');
+          }}
+          className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded-full transition-all"
+          title="লিংক কপি করুন"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+            <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+          </svg>
+          কপি লিংক
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
+
+</>
   );
 }

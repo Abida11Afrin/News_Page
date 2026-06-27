@@ -174,30 +174,35 @@ export default function Home() {
             </div>
 
             {/* আজকের পত্রিকা */}
-            <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-              <div className="bg-cyan-900 text-white text-center text-[10px] font-medium py-1">
-                আজকের পত্রিকা
-              </div>
-              <div className="p-1 flex flex-col gap-0.5">
-                {pageList.map((pg, i) => (
-                  <div key={i} className="flex items-center gap-1">
-                    <span className={`text-[8px] ${pg.active ? "text-blue-600" : "text-gray-400"}`}>
-                      {pg.active ? "✅" : "☑"}
-                    </span>
-                    <button className={`text-[8px] hover:underline truncate ${
-                      pg.active ? "text-blue-600" : "text-gray-400"
-                    }`}>
-                      {pg.name}
-                    </button>
-                  </div>
-                ))}
-                <div className="mt-1 pt-1 border-t border-gray-200">
-                  <button className="text-[8px] text-blue-600 hover:underline">
-                    For Advertisement
-                  </button>
-                </div>
-              </div>
-            </div>
+<div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
+  <div className="bg-cyan-900 text-white text-center text-[10px] font-medium py-1.5">
+    আজকের পত্রিকা
+  </div>
+  <div className="p-2 flex flex-col">
+    {pageList.map((pg, i) => (
+      <div key={i}>
+        <div className="flex items-center gap-2 py-1">
+          <span className={`text-sm ${pg.active ? "text-black-800" : "text-black-400"}`}>
+            {pg.active ? "✅" : "✅"}
+          </span>
+          <button className={`text-[11px] hover:underline ${
+            pg.active ? "text-gray-800 font-medium" : "text-black-400"
+          }`}>
+            {pg.name}
+          </button>
+        </div>
+        {i < pageList.length - 1 && (
+          <div className="border-b border-dashed border-cyan-900" />
+        )}
+      </div>
+    ))}
+    <div className="mt-2 pt-2 border-t border-gray-200">
+      <button className="text-[11px] text-gray-700 hover:underline font-medium">
+        For Advertisement
+      </button>
+    </div>
+  </div>
+</div>
 
           </div>
         </div>
