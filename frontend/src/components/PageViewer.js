@@ -42,7 +42,6 @@ export default function PageViewer() {
       .catch(() => setLoading(false));
   }, []);
 
-  // ✅ URL check — direct link দিয়ে আসলে auto modal open
   useEffect(() => {
     if (homeImages.length === 0) return;
     const params = new URLSearchParams(window.location.search);
@@ -53,7 +52,6 @@ export default function PageViewer() {
     }
   }, [homeImages]);
 
-  // ✅ Modal open — URL এ ?image=ID যোগ হবে
   const openViewer = (img) => {
     setSelectedImage(img);
     if (img.id) {
@@ -61,64 +59,29 @@ export default function PageViewer() {
     }
   };
 
-  // ✅ Modal close — URL reset হবে
   const closeViewer = () => {
     setSelectedImage(null);
     router.push('/', { scroll: false });
   };
 
-  // ✅ Toast notification
   const showToast = (message) => {
     const existing = document.getElementById('copy-toast');
     if (existing) existing.remove();
 
-    const style = document.createElement('style');
-    style.id = 'toast-style';
-    style.textContent = `
-      @keyframes fadeInUp {
-        from { opacity: 0; transform: translateX(-50%) translateY(16px); }
-        to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-      }
-    `;
-    document.head.appendChild(style);
-
     const toast = document.createElement('div');
     toast.id = 'copy-toast';
-    toast.innerHTML = `
-      <div style="display:flex; align-items:center; gap:8px;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" 
-             stroke="white" stroke-width="2.5">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
-        <span>${message}</span>
-      </div>
-    `;
+    toast.textContent = message;
     toast.style.cssText = `
-      position: fixed;
-      bottom: 32px;
-      left: 50%;
+      position: fixed; bottom: 32px; left: 50%;
       transform: translateX(-50%);
       background: linear-gradient(135deg, #059669, #10b981);
-      color: white;
-      padding: 12px 24px;
-      border-radius: 50px;
-      font-size: 14px;
-      font-weight: 600;
+      color: white; padding: 12px 24px; border-radius: 50px;
+      font-size: 14px; font-weight: 600;
       box-shadow: 0 8px 24px rgba(0,0,0,0.2);
       z-index: 99999;
-      animation: fadeInUp 0.3s ease;
-      white-space: nowrap;
     `;
     document.body.appendChild(toast);
-
-    setTimeout(() => {
-      toast.style.transition = 'opacity 0.4s ease';
-      toast.style.opacity = '0';
-      setTimeout(() => {
-        toast.remove();
-        style.remove();
-      }, 400);
-    }, 2500);
+    setTimeout(() => toast.remove(), 2500);
   };
 
   if (loading) {
@@ -131,12 +94,12 @@ export default function PageViewer() {
 
   return (
     <>
-      {/* Left Sidebar */}
-      <div className="flex flex-col gap-1" style={{ width: '110px', minWidth: '110px' }}>
-        <div className="bg-teal-700 text-white text-center text-[10px] font-medium py-1 rounded-t">
+      {/* ===== Left Sidebar (Thumbnails) - Always vertical, responsive width ===== */}
+      <div className="flex flex-col gap-1 w-[60px] sm:w-[85px] lg:w-[110px] min-w-[60px] sm:min-w-[85px] lg:min-w-[110px] shrink-0">
+        <div className="bg-teal-700 text-white text-center text-[8px] sm:text-[9px] lg:text-[10px] font-medium py-1 rounded-t">
           সকল পাতা
         </div>
-        <div className="flex flex-col gap-1 overflow-y-auto pr-0.5" style={{ maxHeight: '600px' }}>
+        <div className="flex flex-col gap-1 overflow-y-auto pr-0.5 max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] scrollbar-hide">
           {pages.map((pg) => (
             <div
               key={pg.id}
@@ -153,11 +116,10 @@ export default function PageViewer() {
                   alt={pg.title}
                   width={100}
                   height={130}
-                  className="object-cover w-full"
-                  style={{ height: '120px' }}
+                  className="object-cover w-full h-[70px] sm:h-[95px] lg:h-[120px]"
                 />
               </div>
-              <p className="text-center text-[8px] mt-0.5 font-medium rounded py-0.5 truncate px-0.5 bg-cyan-900 text-white">
+              <p className="text-center text-[6px] sm:text-[7px] lg:text-[8px] mt-0.5 font-medium rounded py-0.5 truncate px-0.5 bg-cyan-900 text-white">
                 {pg.title}
               </p>
             </div>
@@ -165,13 +127,18 @@ export default function PageViewer() {
         </div>
       </div>
 
-      {/* Center View */}
+      {/* ===== Center View ===== */}
       <div className="flex-1 flex flex-col min-w-0">
         <div
-          className="bg-white rounded-3xl overflow-hidden flex-1 flex flex-col"
-          style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.13), 0 1.5px 6px rgba(0,0,0,0.08)' }}
+          className="bg-white rounded-2xl lg:rounded-3xl overflow-hidden flex-1 flex flex-col"
+          style={{
+            boxShadow: '0 4px 24px rgba(0,0,0,0.13), 0 1.5px 6px rgba(0,0,0,0.08)',
+          }}
         >
-          <div className="flex-1 p-3 flex flex-col gap-3 overflow-y-auto" style={{ minHeight: '300px' }}>
+          <div
+            className="flex-1 p-1.5 sm:p-2 lg:p-3 flex flex-col gap-2 lg:gap-3 overflow-y-auto"
+            style={{ minHeight: '250px' }}
+          >
             {homeImages.length > 0 ? (
               homeImages.map((img) => {
                 const size = sizeMap[img.size] || sizeMap.medium;
@@ -183,20 +150,6 @@ export default function PageViewer() {
                     {img.content ? (
                       <div
                         className="ck-content w-full cursor-pointer"
-                        onMouseOver={(e) => {
-                          const hoveredImg = e.target.closest('img');
-                          if (hoveredImg) {
-                            hoveredImg.style.filter = 'brightness(0.5)';
-                            hoveredImg.style.transition = 'filter 0.3s ease';
-                          }
-                        }}
-                        onMouseOut={(e) => {
-                          const hoveredImg = e.target.closest('img');
-                          if (hoveredImg) {
-                            hoveredImg.style.filter = 'brightness(1)';
-                            hoveredImg.style.transition = 'filter 0.3s ease';
-                          }
-                        }}
                         onClick={(e) => {
                           const clickedImg = e.target.closest('img');
                           if (clickedImg) {
@@ -213,15 +166,15 @@ export default function PageViewer() {
                     ) : (
                       <div
                         onClick={() => openViewer(img)}
-                        className="cursor-pointer overflow-hidden rounded-xl transition-all duration-300 group relative"
+                        className="cursor-pointer overflow-hidden rounded-xl transition-all duration-300 group relative w-full"
+                        style={{ maxWidth: size.width }}
                       >
                         <Image
                           src={img.image_url}
                           alt="ছবি"
                           width={size.width}
                           height={size.height}
-                          className="object-contain rounded-xl transition-all duration-300 group-hover:brightness-50"
-                          style={{ width: size.width, height: 'auto' }}
+                          className="object-contain rounded-xl transition-all duration-300 group-hover:brightness-50 w-full h-auto"
                         />
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300" />
                       </div>
@@ -237,26 +190,26 @@ export default function PageViewer() {
           </div>
 
           {/* Bottom bar */}
-          <div className="border-t border-gray-200 flex items-center justify-between px-2 py-1.5 bg-gray-50 gap-1 rounded-b-3xl">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white text-[10px] px-2 py-1 rounded transition-colors whitespace-nowrap">
+          <div className="border-t border-gray-200 flex items-center justify-between px-1.5 sm:px-2 py-1 sm:py-1.5 bg-gray-50 gap-1 rounded-b-2xl lg:rounded-b-3xl">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white text-[8px] sm:text-[10px] px-1.5 sm:px-2 py-1 rounded transition-colors whitespace-nowrap">
               📄 সব পাতা
             </button>
-            <div className="flex items-center gap-1">
-              <button className="w-6 h-6 bg-blue-600 text-white font-bold rounded flex items-center justify-center text-[10px]">f</button>
-              <button className="w-6 h-6 bg-sky-500 text-white font-bold rounded flex items-center justify-center text-[10px]">t</button>
-              <button className="w-6 h-6 bg-red-600 text-white font-bold rounded flex items-center justify-center text-[10px]">▶</button>
+            <div className="flex items-center gap-0.5 sm:gap-1">
+              <button className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-600 text-white font-bold rounded flex items-center justify-center text-[8px] sm:text-[10px]">f</button>
+              <button className="w-5 h-5 sm:w-6 sm:h-6 bg-sky-500 text-white font-bold rounded flex items-center justify-center text-[8px] sm:text-[10px]">t</button>
+              <button className="w-5 h-5 sm:w-6 sm:h-6 bg-red-600 text-white font-bold rounded flex items-center justify-center text-[8px] sm:text-[10px]">▶</button>
             </div>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white text-[10px] px-2 py-1 rounded transition-colors whitespace-nowrap">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white text-[8px] sm:text-[10px] px-1.5 sm:px-2 py-1 rounded transition-colors whitespace-nowrap">
               পরের পাতা »
             </button>
           </div>
         </div>
       </div>
 
-      {/* ✅ Fullscreen Image Viewer */}
+      {/* ===== Fullscreen Image Viewer ===== */}
       {selectedImage && (
         <div
-          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-2 sm:p-4"
           onClick={closeViewer}
         >
           <div
@@ -264,24 +217,23 @@ export default function PageViewer() {
             style={{ maxHeight: '95vh' }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* ✅ Cross Button — modal এর একদম কোণায় */}
             <button
               onClick={closeViewer}
-              className="absolute -top-4 -right-4 z-[200] bg-red-600 hover:bg-red-700 
-                         text-white w-9 h-9 rounded-full flex items-center justify-center 
-                         text-2xl font-bold shadow-lg transition-transform hover:scale-110"
+              className="absolute -top-4 -right-4 z-[200] bg-red-600 hover:bg-red-700 text-white w-9 h-9 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg transition-transform hover:scale-110"
               aria-label="বন্ধ করুন"
             >
               ×
             </button>
 
-            {/* Header */}
-            <div className="flex items-center justify-center px-6 py-4 border-b shrink-0 rounded-t-2xl">
-              <img src="/logo.png" alt="প্রতিদিনের কাগজ" className="h-[50px] w-auto" />
+            <div className="flex items-center justify-center px-6 py-3 border-b shrink-0 rounded-t-2xl">
+              <img
+                src="/logo.png"
+                alt="প্রতিদিনের কাগজ"
+                className="h-[40px] sm:h-[50px] w-auto"
+              />
             </div>
 
-            {/* Image */}
-            <div className="overflow-y-auto flex-1 p-4">
+            <div className="overflow-y-auto flex-1 p-3 sm:p-4">
               <Image
                 src={selectedImage.image_url}
                 alt="ছবি"
@@ -290,72 +242,50 @@ export default function PageViewer() {
                 className="w-full h-auto rounded-xl object-contain"
                 priority
               />
-              {selectedImage.title && (
-                <p className="text-center text-gray-700 mt-4 text-sm">{selectedImage.title}</p>
-              )}
             </div>
 
-            {/* Share Footer */}
-            <div className="flex items-center gap-2 px-4 py-3 border-t bg-gray-50 shrink-0 rounded-b-2xl">
+            <div className="flex items-center gap-2 px-3 sm:px-4 py-3 border-t bg-gray-50 shrink-0 rounded-b-2xl flex-wrap">
               <span className="text-xs text-gray-500 mr-1">শেয়ার করুন</span>
 
-              {/* Facebook */}
               <button
-                onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank')}
-                className="w-8 h-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center transition-all"
+                onClick={() =>
+                  window.open(
+                    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`,
+                    '_blank'
+                  )
+                }
+                className="w-8 h-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center font-bold"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-                  <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
-                </svg>
+                f
               </button>
 
-              {/* Twitter */}
               <button
-                onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`, '_blank')}
-                className="w-8 h-8 bg-sky-500 hover:bg-sky-600 text-white rounded-full flex items-center justify-center transition-all"
+                onClick={() =>
+                  window.open(
+                    `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`,
+                    '_blank'
+                  )
+                }
+                className="w-8 h-8 bg-sky-500 hover:bg-sky-600 text-white rounded-full flex items-center justify-center font-bold"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-                  <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
-                </svg>
+                t
               </button>
 
-              {/* Web/Globe */}
-              <button
-                onClick={() => window.open(selectedImage.image_url, '_blank')}
-                className="w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center transition-all"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="2" y1="12" x2="22" y2="12"/>
-                  <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
-                </svg>
-              </button>
-
-              {/* Print */}
               <button
                 onClick={() => window.print()}
-                className="w-8 h-8 bg-gray-600 hover:bg-gray-700 text-white rounded-full flex items-center justify-center transition-all"
+                className="w-8 h-8 bg-gray-600 hover:bg-gray-700 text-white rounded-full flex items-center justify-center"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                  <polyline points="6 9 6 2 18 2 18 9"/>
-                  <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
-                  <rect x="6" y="14" width="12" height="8"/>
-                </svg>
+                🖨
               </button>
 
-              {/* ✅ Copy Link — full page URL copy */}
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(window.location.href).then(() => {
                     showToast('লিংক কপি হয়েছে!');
                   });
                 }}
-                className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded-full transition-all cursor-pointer"
+                className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded-full cursor-pointer"
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                  <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
-                  <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
-                </svg>
                 কপি লিংক
               </button>
             </div>
