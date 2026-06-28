@@ -133,6 +133,36 @@ const downloadPage = () => {
               <span className="hidden sm:inline">|</span>
               <button className="hover:text-gray-200 text-[14px] font-solaiman transition-colors">🖨 প্রিন্ট</button>
             </div>
+
+            {/* BN / EN Language Button */}
+<div className="flex items-center gap-1">
+  <button
+    onClick={() => {
+      if (typeof window !== 'undefined' && window.translateTo) {
+        window.translateTo('bn');
+      }
+    }}
+    className="w-8 h-7 bg-white text-cyan-900 font-bold text-xs rounded 
+                flex items-center justify-center hover:bg-blue-300 
+                transition-colors cursor-pointer"
+  >
+    BN
+  </button>
+
+  <button
+    onClick={() => {
+      if (typeof window !== 'undefined' && window.translateTo) {
+        window.translateTo('en');
+      }
+    }}
+    className="w-8 h-7 bg-white text-cyan-900 font-bold text-xs rounded 
+                flex items-center justify-center hover:bg-blue-300 
+                transition-colors cursor-pointer"
+  >
+    EN
+  </button>
+</div>
+
           </div>
         </header>
 
