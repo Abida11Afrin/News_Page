@@ -60,6 +60,30 @@ export default function Home() {
     { name: "page-8", active: false },
   ];
 
+//download function
+const downloadPage = () => {
+  const imageUrl = window.__activePageImageUrl;
+  const title = window.__activePageTitle || 'pratidiner-kagoj';
+
+  if (!imageUrl) {
+    alert('কোনো পাতা নির্বাচিত নেই');
+    return;
+  }
+
+  fetch(imageUrl)
+    .then((res) => res.blob())
+    .then((blob) => {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${title}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    })
+    .catch(() => alert('ডাউনলোড হয়নি'));
+};
   return (
     <main className="min-h-screen flex items-center justify-center bg-white-200 px-2">
       <div className="bg-white w-full max-w-[1000px] rounded-2xl shadow-[0_0_25px_rgba(0,0,0,0.2)] border border-gray-300 flex flex-col my-4 overflow-hidden">
@@ -83,9 +107,12 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <button className="text-white text-lg px-1">🏠</button>
               <span className="hidden sm:inline text-white">|</span>
-              <button className="flex items-center gap-1 bg-cyan-800 hover:bg-blue-500 text-white text-xs sm:text-sm px-3 py-1.5 rounded transition-colors">
-                ⬇ ডাউনলোড
-              </button>
+              <button
+                onClick={downloadPage}
+                className="flex items-center gap-1 bg-cyan-800 hover:bg-blue-500 text-white text-xs sm:text-sm px-3 py-1.5 rounded text-[14px] font-solaiman transition-colors"
+                                                          >
+                            ⬇ ডাউনলোড
+</button>
             </div>
             <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide mx-auto sm:mx-0">
               {pages.map((num, i) => (
@@ -98,19 +125,19 @@ export default function Home() {
               </button>
             </div>
             <div className="flex items-center gap-2 text-white text-xs sm:text-sm">
-              <button className="flex items-center gap-1 bg-blue-600 hover:bg-blue-500 px-3 py-1.5 rounded transition-colors">
+              <button className="flex items-center gap-1 bg-blue-600 hover:bg-blue-500 px-3 py-1.5 rounded text-[14px] font-solaiman transition-colors">
                 f Share 4.3K
               </button>
               <span className="hidden sm:inline">|</span>
-              <button className="hover:text-gray-200 transition-colors">🌐 অনলাইন</button>
+              <button className="hover:text-gray-200 text-[14px] font-solaiman transition-colors">🌐 অনলাইন</button>
               <span className="hidden sm:inline">|</span>
-              <button className="hover:text-gray-200 transition-colors">🖨 প্রিন্ট</button>
+              <button className="hover:text-gray-200 text-[14px] font-solaiman transition-colors">🖨 প্রিন্ট</button>
             </div>
           </div>
         </header>
 
         {/* ======== MAIN CONTENT ======== */}
-        <div className="flex flex-row flex-1 gap-1 p-1">
+        <div id="main-content" className="flex flex-row flex-1 gap-1 p-1">
           <PageViewer />
 
           {/* Right Sidebar */}
@@ -118,7 +145,7 @@ export default function Home() {
 
             {/* পুরোনো সংখ্যা */}
             <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-              <div className="bg-teal-700 text-white text-center text-[10px] font-medium py-1">
+              <div className="bg-teal-700 text-white text-center text-[14px] font-solaiman py-1">
                 পুরোনো সংখ্যা
               </div>
               <div className="p-1">
@@ -175,10 +202,10 @@ export default function Home() {
 
             {/* আজকের পত্রিকা */}
 <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-  <div className="bg-cyan-900 text-white text-center text-[10px] font-medium py-1.5">
+  <div className="bg-cyan-900 text-white text-center text-[14px] font-solaiman py-1.5">
     আজকের পত্রিকা
   </div>
-  <div className="p-2 flex flex-col">
+  <div className="p-2 flex flex-col text-[14px] font-solaiman">
     {pageList.map((pg, i) => (
       <div key={i}>
         <div className="flex items-center gap-2 py-1">
@@ -197,7 +224,7 @@ export default function Home() {
       </div>
     ))}
     <div className="mt-2 pt-2 border-t border-gray-200">
-      <button className="text-[11px] text-gray-700 hover:underline font-medium">
+      <button className="text-[11px] text-gray-700 hover:underline text-[14px] font-solaiman">
         For Advertisement
       </button>
     </div>
@@ -217,7 +244,7 @@ export default function Home() {
               height={50}
               className="object-contain mx-auto"
             />
-            <p className="text-gray-500 text-xs mt-1">
+            <p className="text-gray-500 text-xs mt-1 text-[14px] font-solaiman">
               © ২০২৬ সর্বস্বত্ব স্বত্বাধিকার সংরক্ষিত
             </p>
           </div>
