@@ -85,7 +85,7 @@ export default function Home() {
 
 // ===== পুরো outer card scale করার জন্য =====
 const wrapperRef = useRef(null);
-const [wrapperWidth, setWrapperWidth] = useState(2300);
+const [wrapperWidth, setWrapperWidth] = useState(2000);
 
 useEffect(() => {
   const el = wrapperRef.current;
@@ -97,8 +97,8 @@ useEffect(() => {
   return () => observer.disconnect();
 }, []);
 
-const BASE_WIDTH = 2300;
-const MIN_SCALE = 0.6;
+const BASE_WIDTH = 2000;
+const MIN_SCALE = 0.4;
 const rawScale = wrapperWidth / BASE_WIDTH;
 const scale = Math.min(1, Math.max(MIN_SCALE, rawScale));
 const showSidebars = true;
@@ -106,7 +106,7 @@ const showSidebars = true;
 return (
   <main
     ref={wrapperRef}
-    className="min-h-screen flex items-center justify-center bg-white-200 overflow-x-auto overflow-y-hidden px-1"
+    className="min-h-screen flex items-center justify-center bg-white-200 overflow-y-hidden px-1"
   >
     <div
       style={{
@@ -115,7 +115,7 @@ return (
         width: `${BASE_WIDTH}px`,
         minWidth: `${BASE_WIDTH * scale}px`,
       }}
-      className="bg-white rounded-2xl shadow-[0_0_25px_rgba(0,0,0,0.2)] border border-gray-300 flex flex-col overflow-hidden my-4 mx-auto"
+      className="bg-white rounded-3 xl shadow-[0_0_25px_rgba(0,0,0,0.2)] border border-gray-300 flex flex-col overflow-hidden my-4 mx-auto"
     >
         {/* HEADER */}
         <header className="bg-white">
@@ -184,12 +184,14 @@ return (
         </header>
 
 
+
+
         {/* ======== MAIN CONTENT ======== */}
         <div id="main-content" className="flex flex-row flex-1 gap-1.5 p-2">
           <PageViewer showSidebar={showSidebars} />
 
           {/* Right Sidebar */}
-          <div className="flex flex-col gap-2 w-[150px] min-w-[150px] shrink-0">
+          <div className="flex flex-col gap-2 w-[200px] min-w-[200px] shrink-0">
             {/* পুরোনো সংখ্যা */}
             <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
               <div className="bg-teal-700 text-white text-center text-[14px] font-solaiman py-1">
@@ -285,6 +287,7 @@ return (
             </div>
           </div>
         </div>
+
 
         {/* FOOTER */}
         <footer className="bg-white border-t-4 border-blue-600 mt-2">
