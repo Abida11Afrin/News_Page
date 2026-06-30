@@ -96,7 +96,7 @@ export default function PageViewer({ showSidebar = true }) {
     <>
       {/* ===== Left Sidebar (Thumbnails) ===== */}
       {showSidebar && (
-        <div className="flex flex-col gap-1 w-[60px] sm:w-[85px] lg:w-[110px] min-w-[60px] sm:min-w-[85px] lg:min-w-[110px] shrink-0">
+        <div className="flex flex-col gap-1 w-[60px] sm:w-[85px] lg:w-[110px] min-w-[60px] sm:min-w-[85px] lg:min-w-[150px] shrink-0">
           <div className="bg-teal-700 text-white text-center text-[8px] sm:text-[9px] lg:text-[10px] font-medium py-1 rounded-t">
             সকল পাতা
           </div>
