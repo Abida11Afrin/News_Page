@@ -150,37 +150,51 @@ export default function PageViewer({ showSidebar = true }) {
                     className={`flex w-full ${positionClass[img.position] || 'justify-center'}`}
                   >
                     {img.content ? (
-                      <div
-                        className="ck-content w-full cursor-pointer"
-                        onClick={(e) => {
-                          const clickedImg = e.target.closest('img');
-                          if (clickedImg) {
-                            setSelectedImage({ image_url: clickedImg.src });
-                          }
-                        }}
-                        dangerouslySetInnerHTML={{
-                          __html: img.content.replace(
-                            /src="\/media\//g,
-                            `src="${API_URL}/media/`
-                          ),
-                        }}
-                      />
-                    ) : (
-                      <div
-                        onClick={() => openViewer(img)}
-                        className="cursor-pointer overflow-hidden rounded-xl transition-all duration-300 group relative w-full"
-                        style={{ maxWidth: size.width }}
-                      >
-                        <Image
-                          src={img.image_url}
-                          alt="ছবি"
-                          width={size.width}
-                          height={size.height}
-                          className="object-contain rounded-xl transition-all duration-300 group-hover:brightness-50 w-full h-auto"
-                        />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300" />
-                      </div>
-                    )}
+  <div
+    className="ck-content w-full cursor-pointer"
+    onMouseOver={(e) => {
+      const hoveredImg = e.target.closest('img');
+      if (hoveredImg) {
+        hoveredImg.style.filter = 'brightness(0.7)';
+        hoveredImg.style.transition = 'filter 0.3s ease';
+      }
+    }}
+    onMouseOut={(e) => {
+      const hoveredImg = e.target.closest('img');
+      if (hoveredImg) {
+        hoveredImg.style.filter = 'brightness(1)';
+        hoveredImg.style.transition = 'filter 0.3s ease';
+      }
+    }}
+    onClick={(e) => {
+      const clickedImg = e.target.closest('img');
+      if (clickedImg) {
+        setSelectedImage({ image_url: clickedImg.src });
+      }
+    }}
+    dangerouslySetInnerHTML={{
+      __html: img.content.replace(
+        /src="\/media\//g,
+        `src="${API_URL}/media/`
+      ),
+    }}
+  />
+) : (
+<div
+  onClick={() => openViewer(img)}
+  className="cursor-pointer overflow-hidden relative w-full"
+  style={{ maxWidth: size.width }}
+>
+  <Image
+    src={img.image_url}
+    alt="ছবি"
+    width={size.width}
+    height={size.height}
+    className="object-contain w-full h-auto"
+  />
+  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors duration-300" />
+</div>
+)}
                   </div>
                 );
               })
@@ -210,7 +224,8 @@ export default function PageViewer({ showSidebar = true }) {
         {/* Fullscreen Image Viewer */}
         {selectedImage && (
           <div
-            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-2 sm:p-4"
+            className="fixed inset-0 z-[100] bg-black/95 flex items-start justify-center p-2 sm:p-4"
+            style={{ paddingTop: '30px' }}
             onClick={closeViewer}
           >
             <div
