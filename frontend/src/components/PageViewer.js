@@ -18,7 +18,7 @@ const positionClass = {
   right: 'justify-end',
 };
 
-export default function PageViewer() {
+export default function PageViewer({ showSidebar = true }) {
   const [pages, setPages] = useState([]);
   const [homeImages, setHomeImages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -94,38 +94,40 @@ export default function PageViewer() {
 
   return (
     <>
-      {/* ===== Left Sidebar (Thumbnails) - Always vertical, responsive width ===== */}
-      <div className="flex flex-col gap-1 w-[60px] sm:w-[85px] lg:w-[110px] min-w-[60px] sm:min-w-[85px] lg:min-w-[110px] shrink-0">
-        <div className="bg-teal-700 text-white text-center text-[8px] sm:text-[9px] lg:text-[10px] font-medium py-1 rounded-t">
-          সকল পাতা
-        </div>
-        <div className="flex flex-col gap-1 overflow-y-auto pr-0.5 max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] scrollbar-hide">
-          {pages.map((pg) => (
-            <div
-              key={pg.id}
-              className="flex flex-col shrink-0 cursor-pointer"
-              onClick={() => {
-                window.__activePageImageUrl = pg.image_url;
-                window.__activePageTitle = pg.title;
-                router.push(`/page${pg.order}`);
-              }}
-            >
-              <div className="border border-gray-300 hover:border-teal-500 rounded overflow-hidden transition-all">
-                <Image
-                  src={pg.image_url}
-                  alt={pg.title}
-                  width={100}
-                  height={130}
-                  className="object-cover w-full h-[70px] sm:h-[95px] lg:h-[120px]"
-                />
+      {/* ===== Left Sidebar (Thumbnails) ===== */}
+      {showSidebar && (
+        <div className="flex flex-col gap-1 w-[60px] sm:w-[85px] lg:w-[110px] min-w-[60px] sm:min-w-[85px] lg:min-w-[110px] shrink-0">
+          <div className="bg-teal-700 text-white text-center text-[8px] sm:text-[9px] lg:text-[10px] font-medium py-1 rounded-t">
+            সকল পাতা
+          </div>
+          <div className="flex flex-col gap-1 overflow-y-auto pr-0.5 max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] scrollbar-hide">
+            {pages.map((pg) => (
+              <div
+                key={pg.id}
+                className="flex flex-col shrink-0 cursor-pointer"
+                onClick={() => {
+                  window.__activePageImageUrl = pg.image_url;
+                  window.__activePageTitle = pg.title;
+                  router.push(`/page${pg.order}`);
+                }}
+              >
+                <div className="border border-gray-300 hover:border-teal-500 rounded overflow-hidden transition-all">
+                  <Image
+                    src={pg.image_url}
+                    alt={pg.title}
+                    width={100}
+                    height={130}
+                    className="object-cover w-full h-[70px] sm:h-[95px] lg:h-[120px]"
+                  />
+                </div>
+                <p className="text-center text-[6px] sm:text-[7px] lg:text-[8px] mt-0.5 font-medium rounded py-0.5 truncate px-0.5 bg-cyan-900 text-white">
+                  {pg.title}
+                </p>
               </div>
-              <p className="text-center text-[6px] sm:text-[7px] lg:text-[8px] mt-0.5 font-medium rounded py-0.5 truncate px-0.5 bg-cyan-900 text-white">
-                {pg.title}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ===== Center View ===== */}
       <div className="flex-1 flex flex-col min-w-0">
@@ -204,94 +206,94 @@ export default function PageViewer() {
             </button>
           </div>
         </div>
-      </div>
 
-      {/* ===== Fullscreen Image Viewer ===== */}
-      {selectedImage && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-2 sm:p-4"
-          onClick={closeViewer}
-        >
+        {/* Fullscreen Image Viewer */}
+        {selectedImage && (
           <div
-            className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-visible flex flex-col"
-            style={{ maxHeight: '95vh' }}
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-2 sm:p-4"
+            onClick={closeViewer}
           >
-            <button
-              onClick={closeViewer}
-              className="absolute -top-4 -right-4 z-[200] bg-red-600 hover:bg-red-700 text-white w-9 h-9 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg transition-transform hover:scale-110"
-              aria-label="বন্ধ করুন"
+            <div
+              className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-visible flex flex-col"
+              style={{ maxHeight: '95vh' }}
+              onClick={(e) => e.stopPropagation()}
             >
-              ×
-            </button>
-
-            <div className="flex items-center justify-center px-6 py-3 border-b shrink-0 rounded-t-2xl">
-              <img
-                src="/logo.png"
-                alt="প্রতিদিনের কাগজ"
-                className="h-[40px] sm:h-[50px] w-auto"
-              />
-            </div>
-
-            <div className="overflow-y-auto flex-1 p-3 sm:p-4">
-              <Image
-                src={selectedImage.image_url}
-                alt="ছবি"
-                width={1200}
-                height={1600}
-                className="w-full h-auto rounded-xl object-contain"
-                priority
-              />
-            </div>
-
-            <div className="flex items-center gap-2 px-3 sm:px-4 py-3 border-t bg-gray-50 shrink-0 rounded-b-2xl flex-wrap">
-              <span className="text-xs text-gray-500 mr-1">শেয়ার করুন</span>
-
               <button
-                onClick={() =>
-                  window.open(
-                    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`,
-                    '_blank'
-                  )
-                }
-                className="w-8 h-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center font-bold"
+                onClick={closeViewer}
+                className="absolute -top-4 -right-4 z-[200] bg-red-600 hover:bg-red-700 text-white w-9 h-9 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg transition-transform hover:scale-110"
+                aria-label="বন্ধ করুন"
               >
-                f
+                ×
               </button>
 
-              <button
-                onClick={() =>
-                  window.open(
-                    `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`,
-                    '_blank'
-                  )
-                }
-                className="w-8 h-8 bg-sky-500 hover:bg-sky-600 text-white rounded-full flex items-center justify-center font-bold"
-              >
-                t
-              </button>
+              <div className="flex items-center justify-center px-6 py-3 border-b shrink-0 rounded-t-2xl">
+                <img
+                  src="/logo.png"
+                  alt="প্রতিদিনের কাগজ"
+                  className="h-[40px] sm:h-[50px] w-auto"
+                />
+              </div>
 
-              <button
-                onClick={() => window.print()}
-                className="w-8 h-8 bg-gray-600 hover:bg-gray-700 text-white rounded-full flex items-center justify-center"
-              >
-                🖨
-              </button>
+              <div className="overflow-y-auto flex-1 p-3 sm:p-4">
+                <Image
+                  src={selectedImage.image_url}
+                  alt="ছবি"
+                  width={1200}
+                  height={1600}
+                  className="w-full h-auto rounded-xl object-contain"
+                  priority
+                />
+              </div>
 
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(window.location.href).then(() => {
-                    showToast('লিংক কপি হয়েছে!');
-                  });
-                }}
-                className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded-full cursor-pointer"
-              >
-                কপি লিংক
-              </button>
+              <div className="flex items-center gap-2 px-3 sm:px-4 py-3 border-t bg-gray-50 shrink-0 rounded-b-2xl flex-wrap">
+                <span className="text-xs text-gray-500 mr-1">শেয়ার করুন</span>
+
+                <button
+                  onClick={() =>
+                    window.open(
+                      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`,
+                      '_blank'
+                    )
+                  }
+                  className="w-8 h-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center font-bold"
+                >
+                  f
+                </button>
+
+                <button
+                  onClick={() =>
+                    window.open(
+                      `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`,
+                      '_blank'
+                    )
+                  }
+                  className="w-8 h-8 bg-sky-500 hover:bg-sky-600 text-white rounded-full flex items-center justify-center font-bold"
+                >
+                  t
+                </button>
+
+                <button
+                  onClick={() => window.print()}
+                  className="w-8 h-8 bg-gray-600 hover:bg-gray-700 text-white rounded-full flex items-center justify-center"
+                >
+                  🖨
+                </button>
+
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href).then(() => {
+                      showToast('লিংক কপি হয়েছে!');
+                    });
+                  }}
+                  className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded-full cursor-pointer"
+                >
+                  কপি লিংক
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 }

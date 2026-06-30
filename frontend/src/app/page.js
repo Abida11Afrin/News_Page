@@ -2,7 +2,7 @@
 import Image from "next/image";
 import LiveBanglaDateModule from "../components/LiveBanglaDateModule";
 import PageViewer from "../components/PageViewer";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function Home() {
   const pages = ["১", "২", "৩", "৪", "৫", "৬", "৭", "৮"];
@@ -83,6 +83,21 @@ export default function Home() {
       .catch(() => alert("ডাউনলোড হয়নি"));
   };
 
+  // ===== width-based sidebar control =====
+  const containerRef = useRef(null);
+  const [showSidebars, setShowSidebars] = useState(true);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver((entries) => {
+      const width = entries[0].contentRect.width;
+      setShowSidebars(width >= 274);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <main className="min-h-screen flex items-center justify-center bg-white-200 px-1 sm:px-2">
       <div className="bg-white w-full max-w-[1000px] rounded-2xl shadow-[0_0_25px_rgba(0,0,0,0.2)] border border-gray-300 flex flex-col my-2 sm:my-4 overflow-hidden">
@@ -100,7 +115,7 @@ export default function Home() {
             <LiveBanglaDateModule />
           </div>
 
-          {/* Nav Bar - Responsive scaled */}
+          {/* Nav Bar */}
           <div className="bg-cyan-900 flex items-center justify-between px-1.5 sm:px-3 md:px-4 py-1.5 sm:py-2 gap-1 sm:gap-2 flex-wrap">
             <div className="flex items-center gap-1 sm:gap-2">
               <button className="text-white text-sm sm:text-lg px-0.5 sm:px-1">🏠</button>
@@ -152,109 +167,112 @@ export default function Home() {
           </div>
         </header>
 
-        {/* ======== MAIN CONTENT - 3 column always ======== */}
+        {/* ======== MAIN CONTENT ======== */}
         <div
           id="main-content"
-          className="flex flex-row flex-1 gap-1 sm:gap-1.5 p-1 sm:p-2"
+          ref={containerRef}
+          className="flex flex-row flex-1 gap-1 sm:gap-1.5 p-1 sm:p-2 items-stretch w-full overflow-x-hidden"
         >
-          <PageViewer />
+          <PageViewer showSidebar={showSidebars} />
 
-          {/* Right Sidebar - Scaled responsive */}
-          <div className="flex flex-col gap-1 sm:gap-2 w-[85px] sm:w-[115px] lg:w-[150px] min-w-[85px] sm:min-w-[115px] lg:min-w-[150px] shrink-0">
-            {/* পুরোনো সংখ্যা */}
-            <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-              <div className="bg-teal-700 text-white text-center text-[9px] sm:text-[11px] lg:text-[14px] font-solaiman py-1">
-                পুরোনো সংখ্যা
-              </div>
-              <div className="p-1">
-                <div className="flex gap-0.5 mb-1">
-                  <select
-                    className="flex-1 text-[7px] sm:text-[9px] lg:text-[10px] border border-orange-400 rounded px-0.5 py-0.5 min-w-0"
-                    value={selectedMonth}
-                    onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-                  >
-                    {months.map((m, i) => (
-                      <option key={i} value={i}>{m}</option>
-                    ))}
-                  </select>
-                  <select
-                    className="w-9 sm:w-11 lg:w-14 text-[7px] sm:text-[9px] lg:text-[10px] border border-orange-400 rounded px-0.5 py-0.5"
-                    value={selectedYear}
-                    onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                  >
-                    {years.map((y, i) => (
-                      <option key={i} value={2024 + i}>{y}</option>
-                    ))}
-                  </select>
+          {/* Right Sidebar */}
+          {showSidebars && (
+            <div className="flex flex-col gap-1 sm:gap-2 w-[85px] sm:w-[115px] lg:w-[150px] min-w-[85px] sm:min-w-[115px] lg:min-w-[150px] shrink-0">
+              {/* পুরোনো সংখ্যা */}
+              <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
+                <div className="bg-teal-700 text-white text-center text-[9px] sm:text-[11px] lg:text-[14px] font-solaiman py-1">
+                  পুরোনো সংখ্যা
                 </div>
-
-                <table className="w-full border border-orange-300">
-                  <thead>
-                    <tr className="bg-orange-50">
-                      {calendarDays.map((d, i) => (
-                        <th
-                          key={i}
-                          className="py-0.5 text-center text-gray-600 font-medium border border-orange-200 text-[6px] sm:text-[8px] lg:text-[9px]"
-                        >
-                          {d}
-                        </th>
+                <div className="p-1">
+                  <div className="flex gap-0.5 mb-1">
+                    <select
+                      className="flex-1 text-[7px] sm:text-[9px] lg:text-[10px] border border-orange-400 rounded px-0.5 py-0.5 min-w-0"
+                      value={selectedMonth}
+                      onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                    >
+                      {months.map((m, i) => (
+                        <option key={i} value={i}>{m}</option>
                       ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {calendarDates.map((week, wi) => (
-                      <tr key={wi}>
-                        {week.map((date, di) => (
-                          <td
-                            key={di}
-                            className={`text-center py-0.5 border border-orange-200 cursor-pointer hover:bg-orange-100 text-[6px] sm:text-[8px] lg:text-[10px]
-                              ${
-                                isCurrentMonthYear && date === todayDate
-                                  ? "bg-orange-500 text-white font-bold"
-                                  : "text-gray-700"
-                              }
-                              ${di === 0 && date ? "text-red-500" : ""}
-                            `}
+                    </select>
+                    <select
+                      className="w-9 sm:w-11 lg:w-14 text-[7px] sm:text-[9px] lg:text-[10px] border border-orange-400 rounded px-0.5 py-0.5"
+                      value={selectedYear}
+                      onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                    >
+                      {years.map((y, i) => (
+                        <option key={i} value={2024 + i}>{y}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <table className="w-full border border-orange-300">
+                    <thead>
+                      <tr className="bg-orange-50">
+                        {calendarDays.map((d, i) => (
+                          <th
+                            key={i}
+                            className="py-0.5 text-center text-gray-600 font-medium border border-orange-200 text-[6px] sm:text-[8px] lg:text-[9px]"
                           >
-                            {date}
-                          </td>
+                            {d}
+                          </th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {calendarDates.map((week, wi) => (
+                        <tr key={wi}>
+                          {week.map((date, di) => (
+                            <td
+                              key={di}
+                              className={`text-center py-0.5 border border-orange-200 cursor-pointer hover:bg-orange-100 text-[6px] sm:text-[8px] lg:text-[10px]
+                                ${
+                                  isCurrentMonthYear && date === todayDate
+                                    ? "bg-orange-500 text-white font-bold"
+                                    : "text-gray-700"
+                                }
+                                ${di === 0 && date ? "text-red-500" : ""}
+                              `}
+                            >
+                              {date}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
 
-            {/* আজকের পত্রিকা */}
-            <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-              <div className="bg-cyan-900 text-white text-center text-[9px] sm:text-[11px] lg:text-[14px] font-solaiman py-1 sm:py-1.5">
-                আজকের পত্রিকা
-              </div>
-              <div className="p-1 sm:p-2 flex flex-col font-solaiman">
-                {pageList.map((pg, i) => (
-                  <div key={i}>
-                    <div className="flex items-center gap-1 sm:gap-2 py-0.5 sm:py-1">
-                      <span className="text-[8px] sm:text-xs">✅</span>
-                      <button className={`text-[8px] sm:text-[10px] lg:text-[11px] hover:underline ${
-                        pg.active ? "text-gray-800 font-medium" : "text-gray-400"
-                      }`}>
-                        {pg.name}
-                      </button>
+              {/* আজকের পত্রিকা */}
+              <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
+                <div className="bg-cyan-900 text-white text-center text-[9px] sm:text-[11px] lg:text-[14px] font-solaiman py-1 sm:py-1.5">
+                  আজকের পত্রিকা
+                </div>
+                <div className="p-1 sm:p-2 flex flex-col font-solaiman">
+                  {pageList.map((pg, i) => (
+                    <div key={i}>
+                      <div className="flex items-center gap-1 sm:gap-2 py-0.5 sm:py-1">
+                        <span className="text-[8px] sm:text-xs">✅</span>
+                        <button className={`text-[8px] sm:text-[10px] lg:text-[11px] hover:underline ${
+                          pg.active ? "text-gray-800 font-medium" : "text-gray-400"
+                        }`}>
+                          {pg.name}
+                        </button>
+                      </div>
+                      {i < pageList.length - 1 && (
+                        <div className="border-b border-dashed border-cyan-900" />
+                      )}
                     </div>
-                    {i < pageList.length - 1 && (
-                      <div className="border-b border-dashed border-cyan-900" />
-                    )}
+                  ))}
+                  <div className="mt-1 sm:mt-2 pt-1 sm:pt-2 border-t border-gray-200">
+                    <button className="text-[8px] sm:text-[10px] lg:text-[11px] text-gray-700 hover:underline font-solaiman">
+                      For Advertisement
+                    </button>
                   </div>
-                ))}
-                <div className="mt-1 sm:mt-2 pt-1 sm:pt-2 border-t border-gray-200">
-                  <button className="text-[8px] sm:text-[10px] lg:text-[11px] text-gray-700 hover:underline font-solaiman">
-                    For Advertisement
-                  </button>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* FOOTER */}
