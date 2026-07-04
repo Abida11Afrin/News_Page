@@ -5,6 +5,30 @@ import LiveBanglaDateModule from "../components/LiveBanglaDateModule";
 import PageViewer from "../components/PageViewer";
 
 export default function Home() {
+  // Language state
+  const [lang, setLang] = useState("BN");
+  
+  const t = {
+  BN: {
+    download: "⬇ ডাউনলোড",
+    online: "🌐 অনলাইন",
+    print: "🖨 প্রিন্ট",
+    archive: "পুরোনো সংখ্যা",
+    todayPaper: "আজকের পত্রিকা",
+    advertisement: "For Advertisement",
+    copyright: "© ২০২৬ সর্বস্বত্ব স্বত্বাধিকার সংরক্ষিত",
+  },
+  EN: {
+    download: "⬇ Download",
+    online: "🌐 Online",
+    print: "🖨 Print",
+    archive: "Archive",
+    todayPaper: "Today's Paper",
+    advertisement: "For Advertisement",
+    copyright: "© 2026 All Rights Reserved",
+  },
+};
+
   const pages = ["১", "২", "৩", "৪", "৫", "৬", "৭", "৮"];
 
   const months = [
@@ -83,40 +107,42 @@ export default function Home() {
       .catch(() => alert("ডাউনলোড হয়নি"));
   };
 
-// ===== পুরো outer card scale করার জন্য =====
-const wrapperRef = useRef(null);
-const [wrapperWidth, setWrapperWidth] = useState(2000);
+  const wrapperRef = useRef(null);
+  const [wrapperWidth, setWrapperWidth] = useState(2000);
 
-useEffect(() => {
-  const el = wrapperRef.current;
-  if (!el) return;
-  const observer = new ResizeObserver((entries) => {
-    setWrapperWidth(entries[0].contentRect.width);
-  });
-  observer.observe(el);
-  return () => observer.disconnect();
-}, []);
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver((entries) => {
+      setWrapperWidth(entries[0].contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
-const BASE_WIDTH = 2000;
-const MIN_SCALE = 0.4;
-const rawScale = wrapperWidth / BASE_WIDTH;
-const scale = Math.min(1, Math.max(MIN_SCALE, rawScale));
-const showSidebars = true;
+const BASE_WIDTH = 1600; //komale width barbe
+const MIN_SCALE = 0.45;
+const rawScale = (wrapperWidth) / BASE_WIDTH;  
+const scale = Math.max(MIN_SCALE, rawScale);
+  const showSidebars = true;
 
-return (
-  <main
-    ref={wrapperRef}
-    className="min-h-screen flex items-center justify-center bg-white-200 overflow-y-hidden px-1"
-  >
-    <div
-      style={{
-        transform: `scale(${scale})`,
-        transformOrigin: "center center",
-        width: `${BASE_WIDTH}px`,
-        minWidth: `${BASE_WIDTH * scale}px`,
-      }}
-      className="bg-white rounded-3 xl shadow-[0_0_25px_rgba(0,0,0,0.2)] border border-gray-300 flex flex-col overflow-hidden my-4 mx-auto"
+  return (
+    <main
+      ref={wrapperRef}
+className="min-h-screen flex justify-center items-start bg-white-200 overflow-y-hidden pt-[5px]"
     >
+      {/* outermost card — এখানে একবার font set করলে সব inherit করবে */}
+      <div
+        style={{
+          transform: `scale(${scale})`,
+          transformOrigin: "top center",
+          width: `${BASE_WIDTH}px`,
+          minWidth: `${BASE_WIDTH * scale}px`,
+          fontSize: "14px",
+          fontFamily: "SolaimanLipi, sans-serif",
+        }}
+        className="bg-white rounded-3xl shadow-[0_0_25px_rgba(0,0,0,0.2)] border border-gray-300 flex flex-col overflow-hidden my-4 mx-auto"
+      >
         {/* HEADER */}
         <header className="bg-white">
           <div className="flex flex-col items-center justify-center py-3 border-b border-gray-300">
@@ -138,9 +164,9 @@ return (
               <span className="text-white">|</span>
               <button
                 onClick={downloadPage}
-                className="flex items-center gap-1 bg-cyan-800 hover:bg-blue-500 text-white text-sm px-3 py-1.5 rounded font-solaiman transition-colors"
+                className="flex items-center gap-1 bg-cyan-800 hover:bg-blue-500 text-white px-3 py-1.5 rounded transition-colors"
               >
-                ⬇ ডাউনলোড
+                {t[lang].download}
               </button>
             </div>
 
@@ -148,59 +174,74 @@ return (
               {pages.map((num, i) => (
                 <button
                   key={i}
-                  className="w-7 h-7 bg-white hover:bg-blue-100 font-bold text-xs rounded flex items-center justify-center shrink-0 text-blue-600"
+                  className="w-7 h-7 bg-white hover:bg-blue-100 font-bold rounded flex items-center justify-center shrink-0 text-blue-600"
                 >
                   {num}
                 </button>
               ))}
-              <button className="w-7 h-7 bg-white hover:bg-blue-100 font-bold text-xs rounded flex items-center justify-center shrink-0 text-blue-600">
+              <button className="w-7 h-7 bg-white hover:bg-blue-100 font-bold rounded flex items-center justify-center shrink-0 text-blue-600">
                 »
               </button>
             </div>
 
-            <div className="flex items-center gap-2 text-white text-sm">
-              <button className="flex items-center gap-1 bg-blue-600 hover:bg-blue-500 px-3 py-1.5 rounded font-solaiman transition-colors text-xs">
+            <div className="flex items-center gap-2 text-white">
+              <button className="flex items-center gap-1 bg-blue-600 hover:bg-blue-500 px-3 py-1.5 rounded transition-colors">
                 f Share 4.3K
               </button>
               <span>|</span>
-              <button className="hover:text-gray-200 font-solaiman transition-colors text-xs">
-                🌐 অনলাইন
+              <button className="hover:text-gray-200 transition-colors">
+                {t[lang].online}
               </button>
               <span>|</span>
-              <button className="hover:text-gray-200 font-solaiman transition-colors text-xs">
-                🖨 প্রিন্ট
+              <button className="hover:text-gray-200 transition-colors">
+                {t[lang].print}
               </button>
             </div>
 
             <div className="flex items-center gap-1">
-              <button className="w-8 h-7 bg-white text-cyan-900 font-bold text-xs rounded flex items-center justify-center hover:bg-blue-300 transition-colors cursor-pointer">
-                BN
-              </button>
-              <button className="w-8 h-7 bg-white text-cyan-900 font-bold text-xs rounded flex items-center justify-center hover:bg-blue-300 transition-colors cursor-pointer">
-                EN
-              </button>
-            </div>
+  <button
+    onClick={() => setLang("BN")}
+    className={`w-8 h-7 font-bold rounded flex items-center justify-center cursor-pointer transition-colors ${
+      lang === "BN"
+        ? "bg-blue-500 text-white"
+        : "bg-white text-cyan-900 hover:bg-blue-300"
+    }`}
+  >
+    BN
+  </button>
+
+  <button
+    onClick={() => setLang("EN")}
+    className={`w-8 h-7 font-bold rounded flex items-center justify-center cursor-pointer transition-colors ${
+      lang === "EN"
+        ? "bg-blue-500 text-white"
+        : "bg-white text-cyan-900 hover:bg-blue-300"
+    }`}
+  >
+    EN
+  </button>
+</div>
           </div>
         </header>
 
-
-
-
         {/* ======== MAIN CONTENT ======== */}
-        <div id="main-content" className="flex flex-row flex-1 gap-1.5 p-2">
-          <PageViewer showSidebar={showSidebars} />
+<div id="main-content" className="grid grid-cols-[1fr_200px] flex-1 min-h-0 gap-1.5 p-2">
+          <PageViewer showSidebar={showSidebars} 
+           lang={lang}
+           />
 
           {/* Right Sidebar */}
-          <div className="flex flex-col gap-2 w-[200px] min-w-[200px] shrink-0">
+          <div className="flex flex-col gap-2">
             {/* পুরোনো সংখ্যা */}
             <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-              <div className="bg-teal-700 text-white text-center text-[14px] font-solaiman py-1">
-                পুরোনো সংখ্যা
+              <div className="bg-teal-700 text-white text-center py-1">
+                {t[lang].archive}
               </div>
               <div className="p-1">
                 <div className="flex gap-0.5 mb-1">
                   <select
-                    className="flex-1 text-[10px] border border-orange-400 rounded px-0.5 py-0.5 min-w-0"
+                    className="flex-1 border border-orange-400 rounded px-0.5 py-0.5 min-w-0"
+                    style={{ fontSize: "12px" }}
                     value={selectedMonth}
                     onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
                   >
@@ -209,7 +250,8 @@ return (
                     ))}
                   </select>
                   <select
-                    className="w-14 text-[10px] border border-orange-400 rounded px-0.5 py-0.5"
+                    className="w-14 border border-orange-400 rounded px-0.5 py-0.5"
+                    style={{ fontSize: "12px" }}
                     value={selectedYear}
                     onChange={(e) => setSelectedYear(parseInt(e.target.value))}
                   >
@@ -225,7 +267,8 @@ return (
                       {calendarDays.map((d, i) => (
                         <th
                           key={i}
-                          className="py-0.5 text-center text-gray-600 font-medium border border-orange-200 text-[9px]"
+                          className="py-0.5 text-center text-gray-600 font-medium border border-orange-200"
+                          style={{ fontSize: "11px" }}
                         >
                           {d}
                         </th>
@@ -238,7 +281,7 @@ return (
                         {week.map((date, di) => (
                           <td
                             key={di}
-                            className={`text-center py-0.5 border border-orange-200 cursor-pointer hover:bg-orange-100 text-[10px]
+                            className={`text-center py-0.5 border border-orange-200 cursor-pointer hover:bg-orange-100
                               ${
                                 isCurrentMonthYear && date === todayDate
                                   ? "bg-orange-500 text-white font-bold"
@@ -246,6 +289,7 @@ return (
                               }
                               ${di === 0 && date ? "text-red-500" : ""}
                             `}
+                            style={{ fontSize: "12px" }}
                           >
                             {date}
                           </td>
@@ -259,15 +303,15 @@ return (
 
             {/* আজকের পত্রিকা */}
             <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-              <div className="bg-cyan-900 text-white text-center text-[14px] font-solaiman py-1.5">
-                আজকের পত্রিকা
+              <div className="bg-cyan-900 text-white text-center py-1.5">
+                {t[lang].todayPaper}
               </div>
-              <div className="p-2 flex flex-col font-solaiman">
+              <div className="p-2 flex flex-col">
                 {pageList.map((pg, i) => (
                   <div key={i}>
                     <div className="flex items-center gap-2 py-1">
-                      <span className="text-xs">✅</span>
-                      <button className={`text-[11px] hover:underline ${
+                      <span>✅</span>
+                      <button className={`hover:underline ${
                         pg.active ? "text-gray-800 font-medium" : "text-gray-400"
                       }`}>
                         {pg.name}
@@ -279,15 +323,14 @@ return (
                   </div>
                 ))}
                 <div className="mt-2 pt-2 border-t border-gray-200">
-                  <button className="text-[11px] text-gray-700 hover:underline font-solaiman">
-                    For Advertisement
+                  <button className="text-gray-700 hover:underline">
+                    {t[lang].advertisement}
                   </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
 
         {/* FOOTER */}
         <footer className="bg-white border-t-4 border-blue-600 mt-2">
@@ -299,8 +342,8 @@ return (
               height={50}
               className="object-contain mx-auto"
             />
-            <p className="text-gray-500 text-xs mt-1 font-solaiman">
-              © ২০২৬ সর্বস্বত্ব স্বত্বাধিকার সংরক্ষিত
+            <p className="text-gray-500 mt-1" style={{ fontSize: "12px" }}>
+              {t[lang].copyright}
             </p>
           </div>
         </footer>
