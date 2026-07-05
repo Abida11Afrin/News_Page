@@ -1,5 +1,6 @@
 // src/app/layout.js
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -21,6 +22,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="bn">
       <head>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3771774287901809"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -49,15 +57,14 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+
         <script
           src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
           async
         />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable}`}
-      >
-        {/* Google Translate hidden element */}
+
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <div id="google_translate_element" style={{ display: "none" }} />
         {children}
       </body>
