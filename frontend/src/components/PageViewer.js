@@ -40,7 +40,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN" }) {
         const imageId = params.get('image');
         if (imageId) {
           const found = imagesData.find((img) => String(img.id) === String(imageId));
-          if (found) setSelectedImage(found);
+          if (found?.image_url) setSelectedImage(found);
         }
         if (pagesData.length > 0) {
           window.__activePageImageUrl = pagesData[0].image_url;
@@ -143,8 +143,8 @@ export default function PageViewer({ showSidebar = true, lang = "BN" }) {
               className="flex-1 p-3 flex flex-col gap-3 overflow-y-auto"
               style={{ minHeight: '250px' }}
             >
-              {homeImages.length > 0 ? (
-                homeImages.map((img) => {
+              {homeImages.filter((img) => img.title === 'Home Page').length > 0 ? (
+                homeImages.filter((img) => img.title === 'Home Page').map((img) => {
                   const size = sizeMap[img.size] || sizeMap.medium;
                   return (
                     <div

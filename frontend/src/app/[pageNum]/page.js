@@ -5,43 +5,57 @@ import Image from 'next/image';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
+const normalizeContentImageUrls = (content) =>
+  content.replace(/src=(["'])\/media\//g, `src=$1${API_URL}/media/`);
+
+const normalizeTitle = (title) => title?.trim().toLowerCase();
+
 export default function PageDetail() {
   const { pageNum } = useParams();
   const [page, setPage] = useState(null);
   const [pages, setPages] = useState([]);
+  const [centerContent, setCenterContent] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // pageNum থেকে number বের করুন — "page1" → 1
-  const orderNum = parseInt(pageNum?.replace('page', ''));
+  const orderNum = parseInt(pageNum?.replace('page', ''), 10);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/pages/`)
-      .then((r) => r.json())
-      .then((data) => {
-        setPages(data);
-        const found = data.find((p) => p.order === orderNum);
-        setPage(found || null);
+    Promise.all([
+      fetch(`${API_URL}/api/pages/`).then((r) => r.json()),
+      fetch(`${API_URL}/api/homepage-images/`).then((r) => r.json()),
+    ])
+      .then(([pagesData, contentData]) => {
+        const foundPage = pagesData.find((p) => p.order === orderNum);
+        const targetTitle = normalizeTitle(`Page ${orderNum}`);
+        const foundContent = contentData.find((item) => normalizeTitle(item.title) === targetTitle);
+
+        setPages(pagesData);
+        setPage(foundPage || null);
+        setCenterContent(foundContent || null);
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, [orderNum]);
 
-  if (loading) return <div className="flex items-center justify-center h-screen text-gray-500">লোড হচ্ছে...</div>;
-  if (!page) return <div className="flex items-center justify-center h-screen text-gray-500">পাতা পাওয়া যায়নি</div>;
+  if (loading) {
+    return <div className="flex items-center justify-center h-screen text-gray-500">Loading...</div>;
+  }
+
+  if (!page) {
+    return <div className="flex items-center justify-center h-screen text-gray-500">Page not found</div>;
+  }
 
   const currentIdx = pages.findIndex((p) => p.order === orderNum);
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-200 px-2">
       <div className="bg-white w-full max-w-[1200px] rounded-xl shadow-[0_0_25px_rgba(0,0,0,0.2)] border border-gray-300 flex flex-col my-4 overflow-hidden">
-
-        {/* Top bar */}
         <div className="bg-cyan-800 flex items-center justify-between px-4 py-2">
           <button
             onClick={() => window.location.href = '/'}
             className="text-white text-sm hover:text-gray-200 transition-colors"
           >
-            🏠 হোম
+            Home
           </button>
           <span className="text-white text-sm font-medium">{page.title}</span>
           <div className="flex items-center gap-2">
@@ -50,7 +64,7 @@ export default function PageDetail() {
                 onClick={() => window.location.href = `/page${pages[currentIdx - 1].order}`}
                 className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded transition-colors"
               >
-                « আগের পাতা
+                Previous Page
               </button>
             )}
             {currentIdx < pages.length - 1 && (
@@ -58,19 +72,16 @@ export default function PageDetail() {
                 onClick={() => window.location.href = `/page${pages[currentIdx + 1].order}`}
                 className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded transition-colors"
               >
-                পরের পাতা »
+                Next Page
               </button>
             )}
           </div>
         </div>
 
-        {/* Main content */}
         <div className="flex flex-row gap-2 p-2">
-
-          {/* Left Sidebar */}
           <div className="flex flex-col gap-1" style={{ width: '70px', minWidth: '70px' }}>
             <div className="bg-teal-700 text-white text-center text-[10px] font-medium py-1 rounded-t">
-              সকল পাতা
+              All Pages
             </div>
             <div className="flex flex-col gap-1 overflow-y-auto" style={{ maxHeight: '600px' }}>
               {pages.map((pg) => (
@@ -103,28 +114,29 @@ export default function PageDetail() {
             </div>
           </div>
 
-{/* Center — full page image */}
-<div className="flex-1 min-w-0 flex items-start justify-center">
-  <div
-    className="bg-white rounded-3xl overflow-hidden"
-    style={{
-      boxShadow: '0 4px 24px rgba(0,0,0,0.13), 0 1.5px 6px rgba(0,0,0,0.08)',
-      maxWidth: '420px',
-      width: '100%',
-    }}
-  >
-    <Image
-      src={page.image_url}
-      alt={page.title}
-      width={420}
-      height={560}
-      className="object-contain w-full h-auto"
-      style={{ maxHeight: '65vh', display: 'block' }}
-      priority
-    />
-  </div>
-</div>
-
+          <div className="flex-1 min-w-0 flex items-start justify-center">
+            <div
+              className="bg-white rounded-3xl overflow-hidden p-3"
+              style={{
+                boxShadow: '0 4px 24px rgba(0,0,0,0.13), 0 1.5px 6px rgba(0,0,0,0.08)',
+                maxWidth: '900px',
+                width: '100%',
+              }}
+            >
+              {centerContent?.content ? (
+                <div
+                  className="ck-content w-full"
+                  dangerouslySetInnerHTML={{
+                    __html: normalizeContentImageUrls(centerContent.content),
+                  }}
+                />
+              ) : (
+                <div className="flex min-h-[360px] items-center justify-center text-gray-400">
+                  No center content found for Page {orderNum}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </main>
