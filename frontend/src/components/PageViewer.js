@@ -21,7 +21,9 @@ const positionClass = {
 const normalizeContentImageUrls = (content) =>
   content.replace(/src=(["'])\/media\//g, `src=$1${API_URL}/media/`);
 
-export default function PageViewer({ showSidebar = true, lang = "BN" }) {
+const normalizeTitle = (title) => title?.trim().toLowerCase();
+
+export default function PageViewer({ showSidebar = true, lang = "BN", centerTitle = "Home Page" }) {
   const [pages, setPages] = useState([]);
   const [homeImages, setHomeImages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -143,8 +145,8 @@ export default function PageViewer({ showSidebar = true, lang = "BN" }) {
               className="flex-1 p-3 flex flex-col gap-3 overflow-y-auto"
               style={{ minHeight: '250px' }}
             >
-              {homeImages.filter((img) => img.title === 'Home Page').length > 0 ? (
-                homeImages.filter((img) => img.title === 'Home Page').map((img) => {
+              {homeImages.filter((img) => normalizeTitle(img.title) === normalizeTitle(centerTitle)).length > 0 ? (
+                homeImages.filter((img) => normalizeTitle(img.title) === normalizeTitle(centerTitle)).map((img) => {
                   const size = sizeMap[img.size] || sizeMap.medium;
                   return (
                     <div
