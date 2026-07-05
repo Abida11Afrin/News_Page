@@ -18,6 +18,9 @@ const positionClass = {
   right: 'justify-end',
 };
 
+const normalizeContentImageUrls = (content) =>
+  content.replace(/src=(["'])\/media\//g, `src=$1${API_URL}/media/`);
+
 export default function PageViewer({ showSidebar = true, lang = "BN" }) {
   const [pages, setPages] = useState([]);
   const [homeImages, setHomeImages] = useState([]);
@@ -33,6 +36,12 @@ export default function PageViewer({ showSidebar = true, lang = "BN" }) {
       .then(([pagesData, imagesData]) => {
         setPages(pagesData);
         setHomeImages(imagesData);
+        const params = new URLSearchParams(window.location.search);
+        const imageId = params.get('image');
+        if (imageId) {
+          const found = imagesData.find((img) => String(img.id) === String(imageId));
+          if (found) setSelectedImage(found);
+        }
         if (pagesData.length > 0) {
           window.__activePageImageUrl = pagesData[0].image_url;
           window.__activePageTitle = pagesData[0].title;
@@ -41,16 +50,6 @@ export default function PageViewer({ showSidebar = true, lang = "BN" }) {
       })
       .catch(() => setLoading(false));
   }, []);
-
-  useEffect(() => {
-    if (homeImages.length === 0) return;
-    const params = new URLSearchParams(window.location.search);
-    const imageId = params.get('image');
-    if (imageId) {
-      const found = homeImages.find((img) => String(img.id) === String(imageId));
-      if (found) setSelectedImage(found);
-    }
-  }, [homeImages]);
 
   const openViewer = (img) => {
     setSelectedImage(img);
@@ -176,10 +175,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN" }) {
                             }
                           }}
                           dangerouslySetInnerHTML={{
-                            __html: img.content.replace(
-                              /src="\/media\//g,
-                              `src="${API_URL}/media/`
-                            ),
+                            __html: normalizeContentImageUrls(img.content),
                           }}
                         />
                       ) : (
