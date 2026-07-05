@@ -13,6 +13,16 @@ const nextConfig = {
         hostname: 'news-page-ud6d.onrender.com',
         pathname: '/media/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'pkagoj.com',
+        pathname: '/**',
+      },
     ],
     unoptimized: true,  
   },
