@@ -337,8 +337,8 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   <LiveBanglaDateModule />
                 </div>
 
-               <div className="flex-1 flex items-center justify-center overflow-hidden bg-white p-2 md:overflow-auto md:p-6">
-                 <div className="flex h-full w-full items-center justify-center border border-gray-300 bg-white p-2 md:h-auto md:w-auto md:min-w-max md:p-3">
+               <div className="flex-1 flex items-start justify-center overflow-hidden bg-white p-2 md:overflow-auto md:p-6">
+                 <div className="flex h-full w-full items-start justify-center border border-gray-300 bg-white p-2 md:h-auto md:w-auto md:min-w-max md:p-3">
                    <img
   src={selectedImage.image_url}
   alt="ছবি"
