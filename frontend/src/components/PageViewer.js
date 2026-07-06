@@ -19,9 +19,17 @@ const positionClass = {
 };
 
 const normalizeContentImageUrls = (content) =>
-  content.replace(/src=(["'])\/media\//g, `src=$1${API_URL}/media/`);
+  String(content || '')
+    .replace(/src=(["'])\/media\//g, `src=$1${API_URL}/media/`)
+    .replace(/(<table\b[^>]*?)\sstyle=(["'])width:\s*0px;?\2/gi, '$1');
 
-const normalizeTitle = (title) => title?.trim().toLowerCase();
+const normalizeTitle = (title) =>
+  String(title || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .replace(/\bpage\s+(\d+)\b/g, 'page$1');
 
 export default function PageViewer({ showSidebar = true, lang = "BN", centerTitle = "Home Page" }) {
   const [pages, setPages] = useState([]);
@@ -29,6 +37,9 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
   const router = useRouter();
+  const matchedCenterContent = homeImages.filter(
+    (img) => normalizeTitle(img?.title) === normalizeTitle(centerTitle)
+  );
 
   useEffect(() => {
     Promise.all([
@@ -36,22 +47,29 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
       fetch(`${API_URL}/api/homepage-images/`).then((r) => r.json()),
     ])
       .then(([pagesData, imagesData]) => {
-        setPages(pagesData);
-        setHomeImages(imagesData);
-        const params = new URLSearchParams(window.location.search);
-        const imageId = params.get('image');
-        if (imageId) {
-          const found = imagesData.find((img) => String(img.id) === String(imageId));
-          if (found?.image_url) setSelectedImage(found);
-        }
-        if (pagesData.length > 0) {
-          window.__activePageImageUrl = pagesData[0].image_url;
-          window.__activePageTitle = pagesData[0].title;
-        }
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+  setPages(Array.isArray(pagesData) ? pagesData : []);
+  setHomeImages(Array.isArray(imagesData) ? imagesData : []);
+
+  const params = new URLSearchParams(window.location.search);
+  const imageId = params.get("image");
+
+  if (imageId && Array.isArray(imagesData)) {
+    const found = imagesData.find((img) => String(img.id) === String(imageId));
+    if (found?.image_url) setSelectedImage(found);
+  }
+
+  if (Array.isArray(pagesData) && pagesData.length > 0) {
+    window.__activePageImageUrl = pagesData[0].image_url;
+    window.__activePageTitle = pagesData[0].title;
+  }
+
+  setLoading(false);
+})
+.catch((error) => {
+  console.error("FETCH ERROR:", error);
+  setLoading(false);
+});
+  }, [centerTitle]);
 
   const openViewer = (img) => {
     setSelectedImage(img);
@@ -145,15 +163,15 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
               className="flex-1 p-3 flex flex-col gap-3 overflow-y-auto"
               style={{ minHeight: '250px' }}
             >
-              {homeImages.filter((img) => normalizeTitle(img.title) === normalizeTitle(centerTitle)).length > 0 ? (
-                homeImages.filter((img) => normalizeTitle(img.title) === normalizeTitle(centerTitle)).map((img) => {
+              {matchedCenterContent.length > 0 ? (
+                matchedCenterContent.map((img) => {
                   const size = sizeMap[img.size] || sizeMap.medium;
                   return (
                     <div
                       key={img.id}
                       className={`flex w-full ${positionClass[img.position] || 'justify-center'}`}
                     >
-                      {img.content ? (
+                      {img?.content ? (
                         <div
                           className="ck-content w-full cursor-pointer"
                           onMouseOver={(e) => {
@@ -180,7 +198,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                             __html: normalizeContentImageUrls(img.content),
                           }}
                         />
-                      ) : (
+                      ) : img?.image_url ? (
                         <div
                           onClick={() => openViewer(img)}
                           className="cursor-pointer overflow-hidden relative w-full"
@@ -195,7 +213,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                           />
                           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors duration-300" />
                         </div>
-                      )}
+                      ) : null}
                     </div>
                   );
                 })
