@@ -252,7 +252,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
               onClick={closeViewer}
             >
               <div
-  className="relative rounded-2xl shadow-2xl overflow-visible flex flex-col w-[96vw] md:w-[95vw] md:max-w-[95vw]"
+  className="relative bg-white rounded shadow-2xl overflow-visible flex flex-col w-[96vw] md:w-[95vw] md:max-w-[95vw]"
   style={{ height: "95vh" }}
                 onClick={(e) => e.stopPropagation()}
               >
@@ -264,7 +264,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   ×
                 </button>
 
-                <div className="flex items-center justify-center px-6 py-3 border-b shrink-0 rounded-t-2xl bg-white">
+                <div className="flex items-center justify-center px-6 py-2 border-b border-gray-300 shrink-0 rounded-t bg-white">
                   <img
                     src="/logo.png"
                     alt="প্রতিদিনের কাগজ"
@@ -272,17 +272,17 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   />
                 </div>
 
-               <div className="flex-1 overflow-auto bg-transparent p-3">
-                 <div className="min-w-max flex justify-center">
+               <div className="flex-1 overflow-auto bg-white p-6">
+                 <div className="min-w-max flex justify-center border border-gray-300 bg-white p-3">
                    <img
   src={selectedImage.image_url}
   alt="ছবি"
-  className="max-w-none h-auto rounded-xl"
+  className="max-w-none h-auto"
 />
                  </div>
                 </div>
 
-                <div className="flex items-center gap-2 px-4 py-4 border-t bg-white shrink-0 rounded-b-2xl flex-wrap">
+                <div className="flex items-center gap-2 px-5 py-4 border-t border-gray-300 bg-white shrink-0 rounded-b flex-wrap">
                   <span className="text-gray-500 mr-1" style={{ fontSize: "14px" }}>{lang === "BN" ? "শেয়ার করুন" : "Share"}</span>
 
                   <button
