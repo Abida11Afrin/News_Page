@@ -308,7 +308,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
           {/* Fullscreen Image Viewer */}
           {selectedImage && (
             <div
-  className="fixed inset-0 z-[100] flex items-center justify-center p-0.1 md:p-3"
+  className="fixed inset-0 z-[100] flex items-start justify-center px-2 pb-2 pt-2 md:px-3 md:pb-3 md:pt-2"
               style={{
                 backgroundColor: '#050505',
                 backgroundImage: 'repeating-linear-gradient(135deg, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 1px, transparent 1px, transparent 8px)',
