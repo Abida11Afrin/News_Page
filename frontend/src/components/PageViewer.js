@@ -31,6 +31,12 @@ const normalizeTitle = (title) =>
     .replace(/\s+/g, ' ')
     .replace(/\bpage\s+(\d+)\b/g, 'page$1');
 
+const getPageOrderFromTitle = (title) => {
+  const normalized = normalizeTitle(title);
+  const match = normalized.match(/^page(\d+)$/);
+  return match ? Number(match[1]) : 1;
+};
+
 export default function PageViewer({ showSidebar = true, lang = "BN", centerTitle = "Home Page" }) {
   const [pages, setPages] = useState([]);
   const [homeImages, setHomeImages] = useState([]);
@@ -59,8 +65,12 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
   }
 
   if (Array.isArray(pagesData) && pagesData.length > 0) {
-    window.__activePageImageUrl = pagesData[0].image_url;
-    window.__activePageTitle = pagesData[0].title;
+    const activeOrder = getPageOrderFromTitle(centerTitle);
+    const activePage =
+      pagesData.find((pg) => Number(pg.order) === activeOrder) || pagesData[0];
+
+    window.__activePageImageUrl = activePage.image_url;
+    window.__activePageTitle = activePage.title;
   }
 
   setLoading(false);
