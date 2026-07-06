@@ -277,7 +277,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                    <img
   src={selectedImage.image_url}
   alt="ছবি"
-  className="max-w-full max-h-[60vh] object-contain md:max-w-none md:max-h-none md:h-auto"
+  className="max-w-full max-h-[72vh] object-contain md:max-w-none md:max-h-none md:h-auto"
 />
                  </div>
                 </div>
