@@ -93,6 +93,18 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
     router.push('/', { scroll: false });
   };
 
+  const goToNextPage = () => {
+    const normalizedCenterTitle = normalizeTitle(centerTitle);
+    const currentOrder =
+      normalizedCenterTitle === normalizeTitle("Home Page")
+        ? 0
+        : getPageOrderFromTitle(centerTitle);
+    const maxOrder = pages.length || 8;
+    const nextOrder = Math.min(currentOrder + 1, maxOrder);
+
+    router.push(`/page${nextOrder}`);
+  };
+
   const showToast = (message) => {
     const existing = document.getElementById('copy-toast');
     if (existing) existing.remove();
@@ -241,11 +253,11 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
 
               </button>
               <div className="flex items-center gap-1">
-                <button className="w-6 h-6 bg-blue-600 text-white font-bold rounded flex items-center justify-center" style={{ fontSize: "12px" }}>f</button>
-                <button className="w-6 h-6 bg-sky-500 text-white font-bold rounded flex items-center justify-center" style={{ fontSize: "12px" }}>t</button>
-                <button className="w-6 h-6 bg-red-600 text-white font-bold rounded flex items-center justify-center" style={{ fontSize: "12px" }}>▶</button>
+                <button onClick={() => window.open('https://www.facebook.com/', '_blank')} className="w-6 h-6 bg-blue-600 text-white font-bold rounded flex items-center justify-center" style={{ fontSize: "12px" }}>f</button>
+                <button onClick={() => window.open('https://x.com/login', '_blank')} className="w-6 h-6 bg-sky-500 text-white font-bold rounded flex items-center justify-center" style={{ fontSize: "12px" }}>t</button>
+                <button onClick={() => window.open('https://www.youtube.com/', '_blank')} className="w-6 h-6 bg-red-600 text-white font-bold rounded flex items-center justify-center" style={{ fontSize: "12px" }}>▶</button>
               </div>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors whitespace-nowrap" style={{ fontSize: "14px" }}>
+              <button onClick={goToNextPage} className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors whitespace-nowrap" style={{ fontSize: "14px" }}>
                 {lang === "BN" ? "পরের পাতা »" : "Next Page »"}
               </button>
             </div>
