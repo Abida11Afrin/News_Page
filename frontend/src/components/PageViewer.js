@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -44,11 +44,14 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
   const [selectedImage, setSelectedImage] = useState(null);
   const [showAllPages, setShowAllPages] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const isAllPagesVisible = showAllPages || searchParams.has('all_pages');
+  const isAllPagesVisible = showAllPages;
   const matchedCenterContent = homeImages.filter(
     (img) => normalizeTitle(img?.title) === normalizeTitle(centerTitle)
   );
+
+  useEffect(() => {
+    setShowAllPages(window.location.search.includes('all_pages'));
+  }, []);
 
   useEffect(() => {
     Promise.all([
@@ -285,7 +288,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
             <div className="border-t border-gray-200 flex items-center justify-between px-2 py-1.5 bg-gray-50 gap-1 rounded-b-2xl lg:rounded-b-3xl">
               <button onClick={() => {
                 setShowAllPages(true);
-                router.push('?all_pages', { scroll: false });
+                router.push('/?all_pages', { scroll: false });
               }} className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors whitespace-nowrap" style={{ fontSize: "14px" }}>
                   {lang === "BN" ? "📄 সব পাতা" : "📄 All Pages"}
 
