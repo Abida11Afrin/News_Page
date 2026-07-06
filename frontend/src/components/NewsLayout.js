@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import LiveBanglaDateModule from "./LiveBanglaDateModule";
 import PageViewer from "./PageViewer";
 
@@ -160,7 +161,7 @@ className="min-h-screen flex justify-center items-start bg-white-200 overflow-y-
           {/* Nav Bar */}
           <div className="bg-cyan-900 flex items-center justify-between px-3 md:px-4 py-2 gap-2 flex-wrap">
             <div className="flex items-center gap-2">
-              <button className="text-white text-lg px-1">🏠</button>
+              <Link href="/" className="text-white text-lg px-1">🏠</Link>
               <span className="text-white">|</span>
               <button
                 onClick={downloadPage}
