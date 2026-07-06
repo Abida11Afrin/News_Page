@@ -269,18 +269,14 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   />
                 </div>
 
-               <div className="overflow-auto flex-1 p-2 flex justify-center bg-black">
-                 <Image
+               <div className="flex-1 overflow-auto bg-black p-3">
+                 <div className="min-w-max flex justify-center">
+                   <img
   src={selectedImage.image_url}
   alt="ছবি"
-  width={2000}
-  height={3000}
-  priority
-  className="rounded-xl w-full md:w-[1700px] h-auto"
-  style={{
-    maxWidth: "100%",
-  }}
+  className="max-w-none h-auto rounded-xl"
 />
+                 </div>
                 </div>
 
                 <div className="flex items-center gap-2 px-4 py-4 border-t bg-gray-50 shrink-0 rounded-b-2xl flex-wrap">
