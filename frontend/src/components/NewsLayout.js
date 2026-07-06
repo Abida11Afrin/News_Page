@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import LiveBanglaDateModule from "./LiveBanglaDateModule";
@@ -10,38 +10,38 @@ export default function NewsLayout({ centerTitle = "Home Page" }) {
   
   const t = {
   BN: {
-    download: "â¬‡ à¦¡à¦¾à¦‰à¦¨à¦²à§‹à¦¡",
-    online: "ðŸŒ à¦…à¦¨à¦²à¦¾à¦‡à¦¨",
-    print: "ðŸ–¨ à¦ªà§à¦°à¦¿à¦¨à§à¦Ÿ",
-    archive: "à¦ªà§à¦°à§‹à¦¨à§‹ à¦¸à¦‚à¦–à§à¦¯à¦¾",
-    todayPaper: "à¦†à¦œà¦•à§‡à¦° à¦ªà¦¤à§à¦°à¦¿à¦•à¦¾",
+    download: "⬇ ডাউনলোড",
+    online: "🌐 অনলাইন",
+    print: "🖨 প্রিন্ট",
+    archive: "পুরোনো সংখ্যা",
+    todayPaper: "আজকের পত্রিকা",
     advertisement: "For Advertisement",
-    copyright: "Â© à§¨à§¦à§¨à§¬ à¦¸à¦°à§à¦¬à¦¸à§à¦¬à¦¤à§à¦¬ à¦¸à§à¦¬à¦¤à§à¦¬à¦¾à¦§à¦¿à¦•à¦¾à¦° à¦¸à¦‚à¦°à¦•à§à¦·à¦¿à¦¤",
+    copyright: "© ২০২৬ সর্বস্বত্ব স্বত্বাধিকার সংরক্ষিত",
   },
   EN: {
-    download: "â¬‡ Download",
-    online: "ðŸŒ Online",
-    print: "ðŸ–¨ Print",
+    download: "⬇ Download",
+    online: "🌐 Online",
+    print: "🖨 Print",
     archive: "Archive",
     todayPaper: "Today's Paper",
     advertisement: "For Advertisement",
-    copyright: "Â© 2026 All Rights Reserved",
+    copyright: "© 2026 All Rights Reserved",
   },
 };
 
-  const pages = ["à§§", "à§¨", "à§©", "à§ª", "à§«", "à§¬", "à§­", "à§®"];
+  const pages = ["১", "২", "৩", "৪", "৫", "৬", "৭", "৮"];
 
   const months = [
-    "à¦œà¦¾à¦¨à§à¦¯à¦¼à¦¾à¦°à¦¿", "à¦«à§‡à¦¬à§à¦°à§à¦¯à¦¼à¦¾à¦°à¦¿", "à¦®à¦¾à¦°à§à¦š", "à¦à¦ªà§à¦°à¦¿à¦²", "à¦®à§‡", "à¦œà§à¦¨",
-    "à¦œà§à¦²à¦¾à¦‡", "à¦†à¦—à¦¸à§à¦Ÿ", "à¦¸à§‡à¦ªà§à¦Ÿà§‡à¦®à§à¦¬à¦°", "à¦…à¦•à§à¦Ÿà§‹à¦¬à¦°", "à¦¨à¦­à§‡à¦®à§à¦¬à¦°", "à¦¡à¦¿à¦¸à§‡à¦®à§à¦¬à¦°",
+    "জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",
+    "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর",
   ];
-  const years = ["à§¨à§¦à§¨à§ª", "à§¨à§¦à§¨à§«", "à§¨à§¦à§¨à§¬"];
+  const years = ["২০২৪", "২০২৫", "২০২৬"];
 
   const today = new Date();
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth());
   const [selectedYear, setSelectedYear] = useState(today.getFullYear());
 
-  const calendarDays = ["à¦°", "à¦¸", "à¦®", "à¦¬", "à¦¬à§ƒ", "à¦¶à§", "à¦¶"];
+  const calendarDays = ["র", "স", "ম", "ব", "বৃ", "শু", "শ"];
 
   const getCalendarDates = (month, year) => {
     const firstDay = new Date(year, month, 1).getDay();
@@ -88,7 +88,7 @@ export default function NewsLayout({ centerTitle = "Home Page" }) {
     const title = window.__activePageTitle || "pratidiner-kagoj";
 
     if (!imageUrl) {
-      alert("à¦•à§‹à¦¨à§‹ à¦ªà¦¾à¦¤à¦¾ à¦¨à¦¿à¦°à§à¦¬à¦¾à¦šà¦¿à¦¤ à¦¨à§‡à¦‡");
+      alert("কোনো পাতা নির্বাচিত নেই");
       return;
     }
 
@@ -104,7 +104,7 @@ export default function NewsLayout({ centerTitle = "Home Page" }) {
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
       })
-      .catch(() => alert("à¦¡à¦¾à¦‰à¦¨à¦²à§‹à¦¡ à¦¹à¦¯à¦¼à¦¨à¦¿"));
+      .catch(() => alert("ডাউনলোড হয়নি"));
   };
 
   const wrapperRef = useRef(null);
@@ -131,7 +131,7 @@ const scale = Math.max(MIN_SCALE, rawScale);
       ref={wrapperRef}
 className="min-h-screen flex justify-center items-start bg-white-200 overflow-y-hidden pt-[5px]"
     >
-      {/* outermost card â€” à¦à¦–à¦¾à¦¨à§‡ à¦à¦•à¦¬à¦¾à¦° font set à¦•à¦°à¦²à§‡ à¦¸à¦¬ inherit à¦•à¦°à¦¬à§‡ */}
+      {/* outermost card — এখানে একবার font set করলে সব inherit করবে */}
       <div
         style={{
           transform: `scale(${scale})`,
@@ -148,7 +148,7 @@ className="min-h-screen flex justify-center items-start bg-white-200 overflow-y-
           <div className="flex flex-col items-center justify-center py-3 border-b border-gray-300">
             <Image
               src="/logo.png"
-              alt="à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨à§‡à¦° à¦•à¦¾à¦—à¦œ"
+              alt="প্রতিদিনের কাগজ"
               width={350}
               height={90}
               className="object-contain w-[250px] md:w-[350px]"
@@ -160,7 +160,7 @@ className="min-h-screen flex justify-center items-start bg-white-200 overflow-y-
           {/* Nav Bar */}
           <div className="bg-cyan-900 flex items-center justify-between px-3 md:px-4 py-2 gap-2 flex-wrap">
             <div className="flex items-center gap-2">
-              <button className="text-white text-lg px-1">ðŸ </button>
+              <button className="text-white text-lg px-1">🏠</button>
               <span className="text-white">|</span>
               <button
                 onClick={downloadPage}
@@ -181,7 +181,7 @@ className="min-h-screen flex justify-center items-start bg-white-200 overflow-y-
                 </button>
               ))}
               <button className="w-7 h-7 bg-white hover:bg-blue-100 font-bold rounded flex items-center justify-center shrink-0 text-blue-600">
-                Â»
+                »
               </button>
             </div>
 
@@ -231,7 +231,7 @@ className="min-h-screen flex justify-center items-start bg-white-200 overflow-y-
 
           {/* Right Sidebar */}
           <div className="flex flex-col gap-2">
-            {/* à¦ªà§à¦°à§‹à¦¨à§‹ à¦¸à¦‚à¦–à§à¦¯à¦¾ */}
+            {/* পুরোনো সংখ্যা */}
             <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
               <div className="bg-teal-700 text-white text-center py-1">
                 {t[lang].archive}
@@ -300,7 +300,7 @@ className="min-h-screen flex justify-center items-start bg-white-200 overflow-y-
               </div>
             </div>
 
-            {/* à¦†à¦œà¦•à§‡à¦° à¦ªà¦¤à§à¦°à¦¿à¦•à¦¾ */}
+            {/* আজকের পত্রিকা */}
             <div className="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
               <div className="bg-cyan-900 text-white text-center py-1.5">
                 {t[lang].todayPaper}
@@ -309,7 +309,7 @@ className="min-h-screen flex justify-center items-start bg-white-200 overflow-y-
                 {pageList.map((pg, i) => (
                   <div key={i}>
                     <div className="flex items-center gap-2 py-1">
-                      <span>âœ…</span>
+                      <span>✅</span>
                       <button
                         onClick={() => window.location.href = `/page${i + 1}`}
                         className={`hover:underline ${
@@ -339,7 +339,7 @@ className="min-h-screen flex justify-center items-start bg-white-200 overflow-y-
           <div className="px-6 py-4 text-center">
             <Image
               src="/logo.png"
-              alt="à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨à§‡à¦° à¦•à¦¾à¦—à¦œ"
+              alt="প্রতিদিনের কাগজ"
               width={180}
               height={50}
               className="object-contain mx-auto"
