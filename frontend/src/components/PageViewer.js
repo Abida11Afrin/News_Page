@@ -244,7 +244,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
           {/* Fullscreen Image Viewer */}
           {selectedImage && (
             <div
-  className="fixed inset-0 z-[100] flex items-center justify-center p-3"
+  className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-3"
               style={{
                 backgroundColor: '#050505',
                 backgroundImage: 'repeating-linear-gradient(135deg, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 1px, transparent 1px, transparent 8px)',
@@ -252,8 +252,8 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
               onClick={closeViewer}
             >
               <div
-  className="relative bg-white rounded shadow-2xl overflow-visible flex flex-col w-[98vw] md:w-[98vw] md:max-w-[98vw]"
-  style={{ height: "98vh" }}
+  className="relative bg-white rounded shadow-2xl overflow-visible flex flex-col w-[96vw] max-h-[96vh] md:w-[98vw] md:max-w-[98vw] md:max-h-none"
+  style={{ height: "auto" }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
@@ -264,25 +264,25 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   ×
                 </button>
 
-                <div className="flex items-center justify-center px-6 py-2 border-b border-gray-300 shrink-0 rounded-t bg-white">
+                <div className="flex items-center justify-center px-4 py-2 md:px-6 border-b border-gray-300 shrink-0 rounded-t bg-white">
                   <img
                     src="/logo.png"
                     alt="প্রতিদিনের কাগজ"
-                    className="h-[70px] w-auto"
+                    className="h-[52px] w-auto md:h-[70px]"
                   />
                 </div>
 
-               <div className="flex-1 overflow-auto bg-white p-6">
-                 <div className="min-w-max flex justify-center border border-gray-300 bg-white p-3">
+               <div className="flex-1 flex items-center justify-center overflow-hidden bg-white p-2 md:overflow-auto md:p-6">
+                 <div className="flex justify-center border border-gray-300 bg-white p-2 md:min-w-max md:p-3">
                    <img
   src={selectedImage.image_url}
   alt="ছবি"
-  className="max-w-none h-auto"
+  className="max-w-full max-h-[60vh] object-contain md:max-w-none md:max-h-none md:h-auto"
 />
                  </div>
                 </div>
 
-                <div className="flex items-center gap-2 px-5 py-4 border-t border-gray-300 bg-white shrink-0 rounded-b flex-wrap">
+                <div className="flex items-center gap-2 px-3 py-2 md:px-5 md:py-4 border-t border-gray-300 bg-white shrink-0 rounded-b flex-wrap">
                   <span className="text-gray-500 mr-1" style={{ fontSize: "14px" }}>{lang === "BN" ? "শেয়ার করুন" : "Share"}</span>
 
                   <button
