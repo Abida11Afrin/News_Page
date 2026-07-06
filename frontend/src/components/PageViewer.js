@@ -256,7 +256,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
             <div
 className="fixed inset-0 z-[100] flex items-start justify-center px-2"
 style={{
-  paddingTop: "4px",
+  paddingTop: "6px",
   backgroundColor: "#050505",
   backgroundImage:
     "repeating-linear-gradient(135deg, rgba(255,255,255,.055) 0px, rgba(255,255,255,.055) 1px, transparent 1px, transparent 8px)",
