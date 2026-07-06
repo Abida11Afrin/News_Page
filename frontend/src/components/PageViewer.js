@@ -252,8 +252,8 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
               onClick={closeViewer}
             >
               <div
-  className="relative bg-white rounded shadow-2xl overflow-visible flex flex-col w-[96vw] max-h-[96vh] md:w-[98vw] md:max-w-[98vw] md:max-h-none"
-  style={{ height: "auto" }}
+  className="relative bg-white rounded shadow-2xl overflow-visible flex flex-col w-[95vw] h-[94vh] md:w-[98vw] md:max-w-[98vw] md:h-auto md:max-h-none"
+  style={{ height: undefined }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
@@ -273,11 +273,11 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                 </div>
 
                <div className="flex-1 flex items-center justify-center overflow-hidden bg-white p-2 md:overflow-auto md:p-6">
-                 <div className="flex justify-center border border-gray-300 bg-white p-2 md:min-w-max md:p-3">
+                 <div className="flex h-full w-full items-center justify-center border border-gray-300 bg-white p-2 md:h-auto md:w-auto md:min-w-max md:p-3">
                    <img
   src={selectedImage.image_url}
   alt="ছবি"
-  className="max-w-full max-h-[72vh] object-contain md:max-w-none md:max-h-none md:h-auto"
+  className="max-w-full max-h-full object-contain md:max-w-none md:max-h-none md:h-auto"
 />
                  </div>
                 </div>
