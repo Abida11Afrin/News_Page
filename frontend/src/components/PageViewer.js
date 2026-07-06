@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import LiveBanglaDateModule from './LiveBanglaDateModule';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -327,12 +328,13 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   ×
                 </button>
 
-                <div className="flex items-center justify-center px-4 py-2 md:px-6 border-b border-gray-300 shrink-0 rounded-t bg-white">
+                <div className="flex flex-col items-center justify-center px-4 py-2 md:px-6 border-b border-gray-300 shrink-0 rounded-t bg-white">
                   <img
                     src="/logo.png"
                     alt="প্রতিদিনের কাগজ"
                     className="h-[52px] w-auto md:h-[70px]"
                   />
+                  <LiveBanglaDateModule />
                 </div>
 
                <div className="flex-1 flex items-center justify-center overflow-hidden bg-white p-2 md:overflow-auto md:p-6">
