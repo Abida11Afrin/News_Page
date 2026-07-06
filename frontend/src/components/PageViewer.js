@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -42,7 +42,10 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
   const [homeImages, setHomeImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [showAllPages, setShowAllPages] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isAllPagesVisible = showAllPages || searchParams.has('all_pages');
   const matchedCenterContent = homeImages.filter(
     (img) => normalizeTitle(img?.title) === normalizeTitle(centerTitle)
   );
@@ -185,7 +188,39 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
               className="flex-1 p-3 flex flex-col gap-3 overflow-y-auto"
               style={{ minHeight: '250px' }}
             >
-              {matchedCenterContent.length > 0 ? (
+              {isAllPagesVisible ? (
+                pages.length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {pages.map((pg) => (
+                      <button
+                        key={pg.id}
+                        onClick={() => {
+                          window.__activePageImageUrl = pg.image_url;
+                          window.__activePageTitle = pg.title;
+                          setShowAllPages(false);
+                          router.push(`/page${pg.order}`);
+                        }}
+                        className="flex flex-col items-center gap-1"
+                      >
+                        <Image
+                          src={pg.image_url}
+                          alt={pg.title}
+                          width={160}
+                          height={210}
+                          className="object-cover w-full h-auto border border-gray-300 rounded"
+                        />
+                        <span className="text-center text-gray-700" style={{ fontSize: "12px" }}>
+                          {pg.title}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex-1 flex items-center justify-center">
+                    <p className="text-gray-400 text-center">{lang === "BN" ? "📄 সব পাতা" : "📄 All Pages"}</p>
+                  </div>
+                )
+              ) : matchedCenterContent.length > 0 ? (
                 matchedCenterContent.map((img) => {
                   const size = sizeMap[img.size] || sizeMap.medium;
                   return (
@@ -248,7 +283,10 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
 
             {/* Bottom bar */}
             <div className="border-t border-gray-200 flex items-center justify-between px-2 py-1.5 bg-gray-50 gap-1 rounded-b-2xl lg:rounded-b-3xl">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors whitespace-nowrap" style={{ fontSize: "14px" }}>
+              <button onClick={() => {
+                setShowAllPages(true);
+                router.push('?all_pages', { scroll: false });
+              }} className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors whitespace-nowrap" style={{ fontSize: "14px" }}>
                   {lang === "BN" ? "📄 সব পাতা" : "📄 All Pages"}
 
               </button>
