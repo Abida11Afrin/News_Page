@@ -244,13 +244,16 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
           {/* Fullscreen Image Viewer */}
           {selectedImage && (
             <div
-  className="fixed inset-0 z-[100] bg-black/95 flex items-start justify-center p-2"
-              style={{ paddingTop: '30px' }}
+  className="fixed inset-0 z-[100] flex items-center justify-center p-3"
+              style={{
+                backgroundColor: '#050505',
+                backgroundImage: 'repeating-linear-gradient(135deg, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 1px, transparent 1px, transparent 8px)',
+              }}
               onClick={closeViewer}
             >
               <div
-  className="relative bg-white rounded-2xl shadow-2xl overflow-visible flex flex-col w-[96vw] md:w-[95vw] md:max-w-[95vw]"
-  style={{ height: "99vh" }}
+  className="relative rounded-2xl shadow-2xl overflow-visible flex flex-col w-[96vw] md:w-[95vw] md:max-w-[95vw]"
+  style={{ height: "95vh" }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
@@ -261,7 +264,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   ×
                 </button>
 
-                <div className="flex items-center justify-center px-6 py-3 border-b shrink-0 rounded-t-2xl">
+                <div className="flex items-center justify-center px-6 py-3 border-b shrink-0 rounded-t-2xl bg-white">
                   <img
                     src="/logo.png"
                     alt="প্রতিদিনের কাগজ"
@@ -269,7 +272,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   />
                 </div>
 
-               <div className="flex-1 overflow-auto bg-black p-3">
+               <div className="flex-1 overflow-auto bg-transparent p-3">
                  <div className="min-w-max flex justify-center">
                    <img
   src={selectedImage.image_url}
@@ -279,7 +282,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                  </div>
                 </div>
 
-                <div className="flex items-center gap-2 px-4 py-4 border-t bg-gray-50 shrink-0 rounded-b-2xl flex-wrap">
+                <div className="flex items-center gap-2 px-4 py-4 border-t bg-white shrink-0 rounded-b-2xl flex-wrap">
                   <span className="text-gray-500 mr-1" style={{ fontSize: "14px" }}>{lang === "BN" ? "শেয়ার করুন" : "Share"}</span>
 
                   <button
