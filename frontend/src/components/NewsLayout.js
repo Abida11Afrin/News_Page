@@ -108,6 +108,26 @@ export default function NewsLayout({ centerTitle = "Home Page" }) {
       .catch(() => alert("ডাউনলোড হয়নি"));
   };
 
+  const sharePage = async () => {
+    const shareUrl = window.location.href;
+
+    if (navigator.share) {
+      await navigator.share({ url: shareUrl });
+      return;
+    }
+
+    const width = 600;
+    const height = 600;
+    const left = window.screenX + (window.outerWidth - width) / 2;
+    const top = window.screenY + (window.outerHeight - height) / 2;
+
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+      '_blank',
+      `width=${width},height=${height},left=${left},top=${top}`
+    );
+  };
+
   const wrapperRef = useRef(null);
   const [wrapperWidth, setWrapperWidth] = useState(2000);
 
@@ -187,7 +207,7 @@ className="min-h-screen flex justify-center items-start bg-white-200 overflow-y-
             </div>
 
             <div className="flex items-center gap-2 text-white">
-              <button className="flex items-center gap-1 bg-blue-600 hover:bg-blue-500 px-3 py-1.5 rounded transition-colors">
+              <button onClick={sharePage} className="flex items-center gap-1 bg-blue-600 hover:bg-blue-500 px-3 py-1.5 rounded transition-colors">
                 f Share 4.3K
               </button>
               <span>|</span>
@@ -195,7 +215,7 @@ className="min-h-screen flex justify-center items-start bg-white-200 overflow-y-
                 {t[lang].online}
               </button>
               <span>|</span>
-              <button className="hover:text-gray-200 transition-colors">
+              <button onClick={() => window.print()} className="hover:text-gray-200 transition-colors">
                 {t[lang].print}
               </button>
             </div>
