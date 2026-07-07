@@ -317,7 +317,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
               onClick={closeViewer}
             >
               <div
-  className="relative bg-white rounded shadow-2xl overflow-visible flex flex-col w-[95vw] h-[94vh] md:w-[98vw] md:max-w-[98vw] md:h-auto md:max-h-none"
+  className="relative bg-white rounded shadow-2xl overflow-visible flex flex-col w-[95vw] h-[94vh] md:w-[98vw] md:max-w-[98vw]"
   style={{ height: undefined }}
                 onClick={(e) => e.stopPropagation()}
               >
