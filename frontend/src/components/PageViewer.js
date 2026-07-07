@@ -336,7 +336,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   ×
                 </button>
 
-                <div className="flex h-full flex-col overflow-y-auto overflow-x-hidden rounded bg-white">
+                <div className="flex h-full flex-col overflow-hidden rounded bg-white md:overflow-y-auto md:overflow-x-hidden">
                 <div className="flex flex-col items-center justify-center px-4 py-2 md:px-6 border-b border-gray-300 shrink-0 rounded-t bg-white">
                   <img
                     src="/logo.png"
@@ -346,8 +346,8 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   <LiveBanglaDateModule />
                 </div>
 
-               <div className="flex-1 min-h-0 flex items-start justify-center overflow-visible bg-white px-2 pb-2 pt-2 md:p-6">
-                 <div className="relative flex h-full w-full items-start justify-center border border-gray-300 bg-white p-2 md:p-3">
+               <div className="flex-1 min-h-0 flex items-start justify-center overflow-visible bg-white px-2 pb-2 pt-2 md:flex-none md:p-6">
+                 <div className="relative flex h-full w-full items-start justify-center border border-gray-300 bg-white p-2 md:h-auto md:p-3">
                    {imageLoading && (
                      <div className="absolute inset-0 flex items-center justify-center bg-white">
                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-red-600" />
@@ -357,7 +357,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
   src={selectedImage.image_url}
   alt="ছবি"
   onLoad={() => setImageLoading(false)}
-  className={`h-auto max-h-full max-w-full object-contain ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+  className={`h-auto max-h-full max-w-full object-contain md:max-h-none ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
 />
                  </div>
                 </div>
