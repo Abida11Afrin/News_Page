@@ -329,6 +329,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   ×
                 </button>
 
+                <div className="flex h-full flex-col overflow-auto rounded bg-white">
                 <div className="flex flex-col items-center justify-center px-4 py-2 md:px-6 border-b border-gray-300 shrink-0 rounded-t bg-white">
                   <img
                     src="/logo.png"
@@ -338,7 +339,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   <LiveBanglaDateModule />
                 </div>
 
-               <div className="flex-1 min-h-0 flex items-start justify-center overflow-auto bg-white px-2 pb-2 pt-2 md:p-6">
+               <div className="shrink-0 flex items-start justify-center overflow-visible bg-white px-2 pb-2 pt-2 md:p-6">
                  <div className="flex w-full items-start justify-center border border-gray-300 bg-white p-2 md:w-auto md:min-w-max md:p-3">
                    <img
   src={selectedImage.image_url}
@@ -393,6 +394,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   >
                     {lang === "BN" ? "কপি লিংক" : "Copy Link"}
                   </button>
+                </div>
                 </div>
               </div>
             </div>,
