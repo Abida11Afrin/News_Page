@@ -1,5 +1,6 @@
 // src/app/layout.js
 import { Geist, Geist_Mono } from "next/font/google";
+import { GoogleTagManager } from "@next/third-parties/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -18,7 +19,30 @@ export const metadata = {
   description: "Bangla Newspaper",
 };
 
-export default function RootLayout({ children }) {
+async function getTrackingSettings() {
+  try {
+    const response = await fetch(
+      "https://news-page-ud6d.onrender.com/api/marketing/tracking-settings/",
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    return response.json();
+  } catch {
+    return null;
+  }
+}
+
+export default async function RootLayout({ children }) {
+  const trackingSettings = await getTrackingSettings();
+  const gtmId =
+    trackingSettings?.is_active && trackingSettings?.gtm_id
+      ? trackingSettings.gtm_id
+      : null;
+
   return (
     <html lang="bn">
       <head>
@@ -30,6 +54,7 @@ export default function RootLayout({ children }) {
         />
       </head>
 
+      {gtmId ? <GoogleTagManager gtmId={gtmId} /> : null}
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
       </body>
