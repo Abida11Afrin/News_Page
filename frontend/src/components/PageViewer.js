@@ -44,6 +44,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
   const [homeImages, setHomeImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [imageLoading, setImageLoading] = useState(false);
   const [showAllPages, setShowAllPages] = useState(false);
   const router = useRouter();
   const isAllPagesVisible = showAllPages;
@@ -54,6 +55,12 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
   useEffect(() => {
     setShowAllPages(window.location.search.includes('all_pages'));
   }, []);
+
+  useEffect(() => {
+    if (selectedImage?.image_url) {
+      setImageLoading(true);
+    }
+  }, [selectedImage]);
 
   useEffect(() => {
     Promise.all([
@@ -317,7 +324,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
               onClick={closeViewer}
             >
               <div
-  className="relative bg-white rounded shadow-2xl overflow-visible flex flex-col w-[95vw] h-[94vh] md:w-[98vw] md:max-w-[98vw]"
+  className="relative bg-white rounded shadow-2xl overflow-visible flex flex-col w-[95vw] h-[94vh] md:w-[92vw] md:max-w-[92vw]"
   style={{ height: undefined }}
                 onClick={(e) => e.stopPropagation()}
               >
@@ -329,7 +336,7 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   ×
                 </button>
 
-                <div className="flex h-full flex-col overflow-auto rounded bg-white">
+                <div className="flex h-full flex-col overflow-y-auto overflow-x-hidden rounded bg-white">
                 <div className="flex flex-col items-center justify-center px-4 py-2 md:px-6 border-b border-gray-300 shrink-0 rounded-t bg-white">
                   <img
                     src="/logo.png"
@@ -339,12 +346,18 @@ export default function PageViewer({ showSidebar = true, lang = "BN", centerTitl
                   <LiveBanglaDateModule />
                 </div>
 
-               <div className="shrink-0 flex items-start justify-center overflow-visible bg-white px-2 pb-2 pt-2 md:p-6">
-                 <div className="flex w-full items-start justify-center border border-gray-300 bg-white p-2 md:w-auto md:min-w-max md:p-3">
+               <div className="flex-1 min-h-0 flex items-start justify-center overflow-visible bg-white px-2 pb-2 pt-2 md:p-6">
+                 <div className="relative flex h-full w-full items-start justify-center border border-gray-300 bg-white p-2 md:p-3">
+                   {imageLoading && (
+                     <div className="absolute inset-0 flex items-center justify-center bg-white">
+                       <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-red-600" />
+                     </div>
+                   )}
                    <img
   src={selectedImage.image_url}
   alt="ছবি"
-  className="max-w-full max-h-full object-contain md:max-w-none md:max-h-none md:h-auto"
+  onLoad={() => setImageLoading(false)}
+  className={`h-auto max-h-full max-w-full object-contain ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
 />
                  </div>
                 </div>
